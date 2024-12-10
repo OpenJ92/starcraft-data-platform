@@ -1,6 +1,6 @@
 create table datapack.UNIT_TYPE (
 	__id__ SERIAL PRIMARY KEY,        -- Auto-incrementing primary key
-    	release_string TEXT,              -- The version or release string
+    	release_string TEXT,              -- Version of Starcraft
     	id INTEGER,                       -- Unit's ID in the game
     	str_id TEXT,                      -- String identifier for the unit
     	name TEXT,                        -- Name of the unit
