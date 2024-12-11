@@ -1,4 +1,4 @@
-CREATE TABLE replay.OBJECT (
+CREATE TABLE IF NOT EXISTS replay.OBJECT (
     __id__ SERIAL PRIMARY KEY,        -- Auto-incrementing primary key
 
     id INTEGER,                       -- Unique identifier for the object

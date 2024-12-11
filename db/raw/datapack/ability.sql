@@ -1,4 +1,4 @@
-CREATE TABLE datapack.ABILITY (
+CREATE TABLE IF NOT EXISTS datapack.ABILITY (
 	__id__ SERIAL PRIMARY KEY,        -- Auto-incrementing primary key
     	release_string TEXT,              -- Version of Starcraft
     	id INTEGER,                       -- Abilities ID in the game
