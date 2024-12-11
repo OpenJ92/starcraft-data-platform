@@ -1,4 +1,4 @@
-create table datapack.UNIT_TYPE (
+CREATE TABLE IF NOT EXISTS datapack.UNIT_TYPE (
 	__id__ SERIAL PRIMARY KEY,        -- Auto-incrementing primary key
     	release_string TEXT,              -- Version of Starcraft
     	id INTEGER,                       -- Unit's ID in the game
