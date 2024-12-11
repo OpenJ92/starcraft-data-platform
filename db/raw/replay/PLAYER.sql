@@ -1,4 +1,4 @@
-CREATE TABLE replay.PLAYER (
+CREATE TABLE IF NOT EXISTS replay.PLAYER (
     __id__ SERIAL PRIMARY KEY,        -- Auto-incrementing primary key
 
     sid INTEGER,                      -- Session ID for the player

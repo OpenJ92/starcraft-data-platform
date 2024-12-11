@@ -1,4 +1,4 @@
-CREATE TABLE replay.MAP (
+CREATE TABLE IF NOT EXISTS replay.MAP (
     __id__ SERIAL PRIMARY KEY,        -- Auto-incrementing primary key
 
     filename TEXT,                    -- Name of the map file
