@@ -1,4 +1,4 @@
-CREATE TABLE replay.INFO (
+CREATE TABLE IF NOT EXISTS replay.INFO (
     __id__ SERIAL PRIMARY KEY,        -- Auto-incrementing primary key
 
     filename TEXT,                    -- Name of the replay file
