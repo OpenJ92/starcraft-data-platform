@@ -1,10 +1,10 @@
-from sqlalchemy import Column, Integer, Text, ForeignKey
+from sqlalchemy import Column, Integer, Text, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 
 from db.base import Base
 
-class ABILITY(Model):
-    __tablename__ = "ABILITY"
+class ability(Base):
+    __tablename__ = "ability"
     __table_args__ = {"schema": "datapack"}
 
     __id__ = Column(Integer, primary_key=True)
@@ -17,5 +17,5 @@ class ABILITY(Model):
     is_build = Column(Boolean)
     build_time = Column(Integer)
 
-    __UNIT_TYPE__ = Column(Integer, ForeignKey("datapack.UNIT_TYPE.__id__"))
-    build_unit = relationship("UNIT_TYPE", back_populates="abilities")
+    __unit_type__ = Column(Integer, ForeignKey("datapack.unit_type.__id__"))
+    build_unit = relationship("unit_type", back_populates="abilities")

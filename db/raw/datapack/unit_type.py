@@ -1,8 +1,10 @@
 from sqlalchemy import Column, Integer, Text, Boolean
+from sqlalchemy.orm import relationship
+
 from db.base import Base
 
-class UNIT_TYPE(Base):
-    __tablename__ = "UNIT_TYPE"
+class unit_type(Base):
+    __tablename__ = "unit_type"
     __table_args__ = {"schema": "datapack"}
 
     __id__ = Column(Integer, primary_key=True)
@@ -20,4 +22,4 @@ class UNIT_TYPE(Base):
     is_army = Column(Boolean)
     is_worker = Column(Boolean)
 
-    abilities = relationship("ABILITY", back_populates="build_unit")
+    abilities = relationship("ability", back_populates="build_unit")
