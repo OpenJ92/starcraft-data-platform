@@ -1,4 +1,4 @@
-\i replay/MAP.sql
-\i replay/INFO.sql
-\i replay/PLAYER.sql
-\i replay/OBJECT.sql
+\i replay/map.sql
+\i replay/info.sql
+\i replay/player.sql
+\i replay/object.sql

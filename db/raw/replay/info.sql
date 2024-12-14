@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS replay.INFO (
     date TIMESTAMP,                   -- Date of the replay
 
     __MAP__ INTEGER,                  -- Foreign key reference to MAP table
-    CONSTRAINT info_map_fkey FOREIGN KEY (__MAP__)
+    CONSTRAINT info_map_fkey FOREIGN KEY (__map__)
         REFERENCES replay.MAP (__id__) ON DELETE SET NULL
 );
 
