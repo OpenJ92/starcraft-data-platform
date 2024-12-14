@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS replay.OBJECT (
+CREATE TABLE IF NOT EXISTS replay.object (
     __id__ SERIAL PRIMARY KEY,        -- Auto-incrementing primary key
 
     id INTEGER,                       -- Unique identifier for the object
@@ -10,15 +10,15 @@ CREATE TABLE IF NOT EXISTS replay.OBJECT (
     location_x INTEGER,               -- X-coordinate of the object
     location_y INTEGER,               -- Y-coordinate of the object
 
-    __INFO__ INTEGER,                 -- Foreign key reference to INFO table
-    __OWNER__ INTEGER,                -- Foreign key reference to PLAYER table
-    __UNIT_TYPE__ INTEGER,            -- Foreign key reference to UNIT_TYPE table
+    __info__ INTEGER,                 -- Foreign key reference to INFO table
+    __owner__ INTEGER,                -- Foreign key reference to PLAYER table
+    __unit_type__ INTEGER,            -- Foreign key reference to UNIT_TYPE table
 
-    CONSTRAINT object_info_fkey FOREIGN KEY (__INFO__)
+    CONSTRAINT object_info_fkey FOREIGN KEY (__info__)
         REFERENCES replay.INFO (__id__) ON DELETE CASCADE,
-    CONSTRAINT object_player_fkey FOREIGN KEY (__OWNER__)
+    CONSTRAINT object_player_fkey FOREIGN KEY (__owner__)
         REFERENCES replay.PLAYER (__id__) ON DELETE SET NULL,
-    CONSTRAINT object_unit_type_fkey FOREIGN KEY (__UNIT_TYPE__)
+    CONSTRAINT object_unit_type_fkey FOREIGN KEY (__unit_type__)
         REFERENCES datapack.UNIT_TYPE (__id__) ON DELETE SET NULL
 );
 
