@@ -9,7 +9,7 @@ class Config:
     DB_PASSWORD = os.getenv("DB_PASSWORD", "default_password")  # Default password
     DB_HOST = os.getenv("DB_HOST", "localhost")  # Default database host
     DB_PORT = os.getenv("DB_PORT", "5432")  # Default PostgreSQL port
-    DB_NAME = os.getenv("DB_NAME", "default_db")  # Default database name
+    DB_NAME = os.getenv("DB_NAME", "default_database")  # Default database name
 
     @classmethod
     def get_connection_string(cls):
@@ -33,7 +33,7 @@ class TestConfig(Config):
 class ProdConfig(Config):
     """Production-specific settings."""
     DB_NAME = "starcraft_prod"
-    DB_HOST = os.getenv("PROD_DB_HOST", "prod-db-instance.aws.com")  # Example AWS RDS host
+    DB_HOST = os.getenv("PROD_DB_HOST", "prod-database-instance.aws.com")  # Example AWS RDS host
 
 
 # Environment Mapping

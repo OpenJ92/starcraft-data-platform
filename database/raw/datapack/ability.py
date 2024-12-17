@@ -1,12 +1,12 @@
-from sqlalchemy import Column, Integer, Text, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, Text, Boolean, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
 
-from db.base import Base
+from database.base import Base
 
 class ability(Base):
     __tablename__ = "ability"
-    __table_args__ = ({"schema": "datapack"},
-        UniqueConstraint("id", "release_string", name="ability_id_release_string_unique"),)
+    __table_args__ = ( UniqueConstraint("id", "release_string", name="ability_id_release_string_unique")
+                     , {"schema": "datapack"})
 
     __id__ = Column(Integer, primary_key=True)
 

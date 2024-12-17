@@ -1,12 +1,12 @@
-from sqlalchemy import Column, Integer, BigInteger, Text, Boolean, DateTime
+from sqlalchemy import Column, Integer, BigInteger, Float, Text, Boolean, DateTime
 from sqlalchemy.orm import relationship
 
-from database.config import Base
-from databasb.raw.replay.map import map
+from database.base import Base
+from database.raw.replay.map import map
 
 
 class info(Base):
-    __tablename__ = "INFO"
+    __tablename__ = "info"
     __table_args__ = {"schema": "replay"}
 
     __id__ = Column(Integer, primary_key=True)
@@ -43,5 +43,5 @@ class info(Base):
     start_time = Column(DateTime)
     date = Column(DateTime)
 
-    players = relationship("PLAYER", back_populates="replay")
-    objects = relationship("OBJECT", back_populates="replay")
+    players = relationship("player", back_populates="replay")
+    objects = relationship("object", back_populates="replay")
