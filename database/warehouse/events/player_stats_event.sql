@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS events.PLAYER_STATS_EVENT (
+CREATE TABLE IF NOT EXISTS events.player_stats_event (
     __id__ SERIAL PRIMARY KEY,          -- Auto-incrementing primary key
 
     name TEXT,                          -- Name of the event
@@ -55,12 +55,12 @@ CREATE TABLE IF NOT EXISTS events.PLAYER_STATS_EVENT (
     ff_vespene_lost_economy FLOAT,
     ff_vespene_lost_technology FLOAT,
 
-    __PLAYER__ INTEGER,                 -- Foreign key to replay.PLAYER
-    __INFO__ INTEGER,                   -- Foreign key to replay.INFO
+    __player__ INTEGER,                 -- Foreign key to replay.PLAYER
+    __info__ INTEGER,                   -- Foreign key to replay.INFO
 
-    CONSTRAINT player_stats_event_player_fkey FOREIGN KEY (__PLAYER__)
+    CONSTRAINT player_stats_event_player_fkey FOREIGN KEY (__player__)
         REFERENCES replay.PLAYER (__id__) ON DELETE SET NULL,
-    CONSTRAINT player_stats_event_info_fkey FOREIGN KEY (__INFO__)
+    CONSTRAINT player_stats_event_info_fkey FOREIGN KEY (__info__)
         REFERENCES replay.INFO (__id__) ON DELETE CASCADE
 );
 

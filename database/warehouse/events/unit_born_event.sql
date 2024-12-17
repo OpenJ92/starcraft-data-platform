@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS events.UNIT_BORN_EVENT (
+CREATE TABLE IF NOT EXISTS events.unit_born_event (
     __id__ SERIAL PRIMARY KEY,          -- Auto-incrementing primary key
 
     frame INTEGER,                      -- Frame number when the unit was born
@@ -13,15 +13,15 @@ CREATE TABLE IF NOT EXISTS events.UNIT_BORN_EVENT (
     x FLOAT,                            -- X-coordinate of the unit
     y FLOAT,                            -- Y-coordinate of the unit
 
-    __PLAYER__ INTEGER,                 -- Foreign key to replay.PLAYER
-    __INFO__ INTEGER,                   -- Foreign key to replay.INFO
-    __OBJECT__ INTEGER,                 -- Foreign key to replay.OBJECT
+    __player__ INTEGER,                 -- Foreign key to replay.PLAYER
+    __info__ INTEGER,                   -- Foreign key to replay.INFO
+    __object__ INTEGER,                 -- Foreign key to replay.OBJECT
 
-    CONSTRAINT unit_born_event_player_fkey FOREIGN KEY (__PLAYER__)
+    CONSTRAINT unit_born_event_player_fkey FOREIGN KEY (__player__)
         REFERENCES replay.PLAYER (__id__) ON DELETE SET NULL,
-    CONSTRAINT unit_born_event_info_fkey FOREIGN KEY (__INFO__)
+    CONSTRAINT unit_born_event_info_fkey FOREIGN KEY (__info__)
         REFERENCES replay.INFO (__id__) ON DELETE CASCADE,
-    CONSTRAINT unit_born_event_object_fkey FOREIGN KEY (__OBJECT__)
+    CONSTRAINT unit_born_event_object_fkey FOREIGN KEY (__object__)
         REFERENCES replay.OBJECT (__id__) ON DELETE SET NULL
 );
 
