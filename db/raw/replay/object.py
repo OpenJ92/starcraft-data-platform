@@ -1,46 +1,48 @@
-from src.db.raw.models.replay.info import INFO
-from src.db.raw.models.replay.player import PLAYER
-from src.db.raw.models.datapack.unit_type import UNIT_TYPE
+from sqlalchemy import Column, Integer, Text, LargeBinary
+from sqlalchemy.orm import relationship
+
+from database.config import Base
+
+from database.raw.replay.info import info
+from database.raw.replay.player import player
+from database.raw.datapack.unit_type import unit_type
 
 
-class OBJECT(db.Model):
-    __tablename__ = "OBJECT"
+class object(Base):
+    __tablename__ = "object"
     __table_args__ = {"schema": "replay"}
 
-    __id__ = db.Column(db.Integer, primary_key=True)
+    __id__ = Column(Integer, primary_key=True)
 
-    id = db.Column(db.Integer)
-    started_at = db.Column(db.Integer)
-    finished_at = db.Column(db.Integer)
-    died_at = db.Column(db.Integer)
-    name = db.Column(db.Text)
+    id = Column(Integer)
+    started_at = Column(Integer)
+    finished_at = Column(Integer)
+    died_at = Column(Integer)
+    name = Column(Text)
 
-    location_x = db.Column(db.Integer)
-    location_y = db.Column(db.Integer)
+    location_x = Column(Integer)
+    location_y = Column(Integer)
 
-    __INFO__ = db.Column(db.Integer, db.ForeignKey("replay.INFO.__id__"))
-    replay = db.relationship("INFO", back_populates="objects")
+    __info__ = Column(Integer, ForeignKey("replay.info.__id__"))
+    replay = relationship("INFO", back_populates="objects")
 
-    __OWNER__ = db.Column(db.Integer, db.ForeignKey("replay.PLAYER.__id__"))
-    owner = db.relationship(
-        "PLAYER",
-        primaryjoin="OBJECT.__OWNER__==PLAYER.__id__",
-        back_populates="objects",
-    )
+    __owner__ = Column(Integer, ForeignKey("replay.player.__id__"))
+    owner = relationship(
+        "player",
+        primaryjoin="object.__owner__==player.__id__",
+        back_populates="owned_objects",)
 
-    ## __KILLED__ = db.Column(db.Integer, db.ForeignKey('replay.PLAYER.__id__'))
-    ## killing_player = db.relationship(
-    ##                             'PLAYER',
-    ##                             primaryjoin='OBJECT.__KILLED__==PLAYER.__id__',
-    ##                             back_populates='killing_player_objs'
-    ##                                 )
+    __killing_player__ = Column(Integer, ForeignKey('replay.player.__id__'))
+    killing_player = relationship(
+        "player",
+        primaryjoin='object.__killing_player__==player.__id__',
+        back_populates='killed_objects')
 
-    ## __KILLEDBY__ = db.Column(db.Integer, db.ForeignKey('replay.PLAYER.__id__'))
-    ## killed_by = db.relationship(
-    ##                             'PLAYER',
-    ##                             primaryjoin='OBJECT.__KILLEDBY__==PLAYER.__id__',
-    ##                             back_populates='killed_by_objs'
-    ##                            )
+    __killing_unit__ = Column(Integer, ForeignKey("replay.object.__id__", nullable=True))
+    killing_unit = relationship("object", remote_side=[__id__], backref="killed_units")
 
-    __UNIT_TYPE__ = db.Column(db.Integer, db.ForeignKey("datapack.UNIT_TYPE.__id__"))
-    unit_type = db.relationship("UNIT_TYPE", back_populates="objects")
+    __unit_type__ = Column(Integer, ForeignKey("datapack.unit_type.__id__"))
+    unit_type = relationship(
+        "unit_type",
+        primaryjoin='object.__unit_type__==unit_type.__id__',
+        back_populates="objects")

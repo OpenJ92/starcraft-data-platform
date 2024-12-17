@@ -13,12 +13,18 @@ CREATE TABLE IF NOT EXISTS replay.object (
     __info__ INTEGER,                 -- Foreign key reference to INFO table
     __owner__ INTEGER,                -- Foreign key reference to PLAYER table
     __unit_type__ INTEGER,            -- Foreign key reference to UNIT_TYPE table
+    __killing_player__ INTEGER,
+    __killing_unit__ INTEGER,
 
     CONSTRAINT object_info_fkey FOREIGN KEY (__info__)
-        REFERENCES replay.INFO (__id__) ON DELETE CASCADE,
+        REFERENCES replay.info (__id__) ON DELETE CASCADE,
     CONSTRAINT object_player_fkey FOREIGN KEY (__owner__)
-        REFERENCES replay.PLAYER (__id__) ON DELETE SET NULL,
+        REFERENCES replay.player (__id__) ON DELETE SET NULL,
+    CONSTRAINT object_killing_player_fkey FOREIGN KEY (__killing_player__)
+	REFERENCES replay.player (__id__) ON DELETE SET NULL,
+    CONSTRAINT object_killing_unit_fkey FOREIGN KEY (__killing_unit__)
+	REFERENCES replay.object (__id__) ON DELETE SET NULL,
     CONSTRAINT object_unit_type_fkey FOREIGN KEY (__unit_type__)
-        REFERENCES datapack.UNIT_TYPE (__id__) ON DELETE SET NULL
+        REFERENCES datapack.unit_type (__id__) ON DELETE SET NULL
 );
 
