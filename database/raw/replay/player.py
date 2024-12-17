@@ -1,7 +1,7 @@
-from sqlalchemy import Column, Integer, Text, Boolean, BigInteger
+from sqlalchemy import Column, Integer, Text, Boolean, BigInteger, ForeignKey
 from sqlalchemy.orm import relationship
 
-from database.config import Base
+from database.base import Base
 
 class player(Base):
     __tablename__ = "player"
@@ -32,5 +32,5 @@ class player(Base):
     owner_objects = relationship( "object", primaryjoin="object.__owner__==player.__id__", back_populates="owner")
     killed_objects = relationship("object", primaryjoin="object.__killing_player__==player.__id__", back_populates="killing_player")
 
-    __info__ = column(integer, foreignkey("replay.info.__id__"))
+    __info__ = Column(Integer, ForeignKey("replay.info.__id__"))
     replay = relationship("info", back_populates="players")

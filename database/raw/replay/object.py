@@ -1,7 +1,7 @@
-from sqlalchemy import Column, Integer, Text, LargeBinary
+from sqlalchemy import Column, Integer, Text, LargeBinary, ForeignKey
 from sqlalchemy.orm import relationship
 
-from database.config import Base
+from database.base import Base
 
 from database.raw.replay.info import info
 from database.raw.replay.player import player
@@ -24,7 +24,7 @@ class object(Base):
     location_y = Column(Integer)
 
     __info__ = Column(Integer, ForeignKey("replay.info.__id__"))
-    replay = relationship("INFO", back_populates="objects")
+    replay = relationship("info", back_populates="objects")
 
     __owner__ = Column(Integer, ForeignKey("replay.player.__id__"))
     owner = relationship(
@@ -38,7 +38,7 @@ class object(Base):
         primaryjoin='object.__killing_player__==player.__id__',
         back_populates='killed_objects')
 
-    __killing_unit__ = Column(Integer, ForeignKey("replay.object.__id__", nullable=True))
+    __killing_unit__ = Column(Integer, ForeignKey("replay.object.__id__"), nullable=True)
     killing_unit = relationship("object", remote_side=[__id__], backref="killed_units")
 
     __unit_type__ = Column(Integer, ForeignKey("datapack.unit_type.__id__"))

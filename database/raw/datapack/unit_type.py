@@ -1,12 +1,12 @@
-from sqlalchemy import Column, Integer, Text, Boolean from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, Text, Boolean, UniqueConstraint
+from sqlalchemy.orm import relationship
 
-from db.base import Base
+from database.base import Base
 
 class unit_type(Base):
     __tablename__ = "unit_type"
-    __table_args__ = ( {"schema": "datapack"},
-      UniqueConstraint("id", "release_string", name="unit_type_id_release_string_unique"),)
-
+    __table_args__ = ( UniqueConstraint("id", "release_string", name="unit_type_id_release_string_unique")
+                     , {"schema": "datapack"})
     __id__ = Column(Integer, primary_key=True)
 
     release_string = Column(Text)

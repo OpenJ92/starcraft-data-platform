@@ -1,7 +1,7 @@
-from sqlalchemy from Column, Integer, Text, LargeBinary
+from sqlalchemy import Column, Integer, Text, LargeBinary
 from sqlalchemy.orm import relationship
 
-from database.config import Base
+from database.base import Base
 
 
 class map(Base):
