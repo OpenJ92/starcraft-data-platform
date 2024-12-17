@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS replay.PLAYER (
+CREATE TABLE IF NOT EXISTS replay.player (
     __id__ SERIAL PRIMARY KEY,        -- Auto-incrementing primary key
 
     sid INTEGER,                      -- Session ID for the player
@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS replay.PLAYER (
 
     id INTEGER,                       -- Another player ID field (possible duplicate or legacy?)
 
-    __INFO__ INTEGER,                 -- Foreign key reference to INFO table
-    CONSTRAINT player_info_fkey FOREIGN KEY (__INFO__)
+    __info__ INTEGER,                 -- Foreign key reference to INFO table
+    CONSTRAINT player_info_fkey FOREIGN KEY (__info__)
         REFERENCES replay.INFO (__id__) ON DELETE CASCADE
 );
 
