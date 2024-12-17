@@ -1,2 +1,2 @@
-\i datapack/UNIT_TYPE.sql
-\i datapack/ABILITY.sql
+\i datapack/unit_type.sql
+\i datapack/ability.sql
