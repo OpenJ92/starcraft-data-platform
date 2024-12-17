@@ -9,6 +9,10 @@ from database.warehouse.replay.info import info
 from database.warehouse.replay.player import player
 from database.warehouse.replay.object import object
 
+from database.warehouse.events.basic_command_event import basic_command_event
+from database.warehouse.events.chat_event import chat_event
+from database.warehouse.events.player_leave_event import player_leave_event
+from database.warehouse.events.player_setup_event import player_setup_event
 
 from database.config import engine
 
