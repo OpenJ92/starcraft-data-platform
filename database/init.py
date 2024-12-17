@@ -1,13 +1,13 @@
 from sqlalchemy import create_engine
 from database.base import Base
 
-from database.raw.datapack.unit_type import unit_type
-from database.raw.datapack.ability import ability
+from database.warehouse.datapack.unit_type import unit_type
+from database.warehouse.datapack.ability import ability
 
-from database.raw.replay.map import map
-from database.raw.replay.info import info
-from database.raw.replay.player import player
-from database.raw.replay.object import object
+from database.warehouse.replay.map import map
+from database.warehouse.replay.info import info
+from database.warehouse.replay.player import player
+from database.warehouse.replay.object import object
 
 
 from database.config import engine

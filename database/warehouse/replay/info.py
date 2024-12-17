@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, BigInteger, Float, Text, Boolean, DateTi
 from sqlalchemy.orm import relationship
 
 from database.base import Base
-from database.raw.replay.map import map
+from database.warehouse.replay.map import map
 
 
 class info(Base):

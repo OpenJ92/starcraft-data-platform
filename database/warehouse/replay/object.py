@@ -3,9 +3,9 @@ from sqlalchemy.orm import relationship
 
 from database.base import Base
 
-from database.raw.replay.info import info
-from database.raw.replay.player import player
-from database.raw.datapack.unit_type import unit_type
+from database.warehouse.replay.info import info
+from database.warehouse.replay.player import player
+from database.warehouse.datapack.unit_type import unit_type
 
 
 class object(Base):
