@@ -33,7 +33,7 @@ class unit_died_event(Base):
     killing_unit = relationship(
         "object",
         primaryjoin="UnitDiedEvent.__killing_unit__==object.__id__",
-        back_populates="kill_event",)
+        back_populates="kill_events",)
 
     __info__ = Column(Integer, ForeignKey("replay.info.__id__"))
     info = relationship("info", back_populates="unit_died_events")

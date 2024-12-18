@@ -46,3 +46,17 @@ class object(Base):
         "unit_type",
         primaryjoin='object.__unit_type__==unit_type.__id__',
         back_populates="objects")
+
+    unit_born_events = relationship("unit_born_event", back_populates="unit")
+    unit_done_events = relationship("unit_done_event", back_populates="unit")
+    unit_init_events = relationship("unit_init_event", back_populates="unit")
+    death_event = relationship(
+        "unit_died_event",
+        primaryjoin="UnitDiedEvent.__UNIT__==OBJECT.__id__",
+        back_populates="unit",
+    )
+    kill_events = relationship(
+        "unit_died_event",
+        primaryjoin="UnitDiedEvent.__KILLING_UNIT__==OBJECT.__id__",
+        back_populates="killing_unit",
+    )
