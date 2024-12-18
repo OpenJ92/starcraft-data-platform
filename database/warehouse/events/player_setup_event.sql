@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS events.PLAYER_SETUP_EVENT (
+CREATE TABLE IF NOT EXISTS events.player_setup_event (
     __id__ SERIAL PRIMARY KEY,          -- Auto-incrementing primary key
 
     pid INTEGER,                        -- Player ID
@@ -9,9 +9,9 @@ CREATE TABLE IF NOT EXISTS events.PLAYER_SETUP_EVENT (
     uid INTEGER,                        -- Unique ID for the player
     sid INTEGER,                        -- Session ID for the player
 
-    __INFO__ INTEGER,                   -- Foreign key to replay.INFO
+    __info__ INTEGER,                   -- Foreign key to replay.INFO
 
-    CONSTRAINT player_setup_event_info_fkey FOREIGN KEY (__INFO__)
+    CONSTRAINT player_setup_event_info_fkey FOREIGN KEY (__info__)
         REFERENCES replay.INFO (__id__) ON DELETE CASCADE
 );
 

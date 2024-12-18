@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS events.CHAT_EVENT (
+CREATE TABLE IF NOT EXISTS events.chat_event (
     __id__ SERIAL PRIMARY KEY,          -- Auto-incrementing primary key
 
     pid INTEGER,                        -- Player ID
@@ -11,11 +11,11 @@ CREATE TABLE IF NOT EXISTS events.CHAT_EVENT (
     to_allies BOOLEAN,                  -- Whether the message was sent to allies only
     to_observers BOOLEAN,               -- Whether the message was sent to observers only
 
-    __PLAYER__ INTEGER,                 -- Foreign key to replay.PLAYER
-    __INFO__ INTEGER,                   -- Foreign key to replay.INFO
+    __player__ INTEGER,                 -- Foreign key to replay.PLAYER
+    __info__ INTEGER,                   -- Foreign key to replay.INFO
 
-    CONSTRAINT chat_event_player_fkey FOREIGN KEY (__PLAYER__)
+    CONSTRAINT chat_event_player_fkey FOREIGN KEY (__player__)
         REFERENCES replay.PLAYER (__id__) ON DELETE SET NULL,
-    CONSTRAINT chat_event_info_fkey FOREIGN KEY (__INFO__)
+    CONSTRAINT chat_event_info_fkey FOREIGN KEY (__info__)
         REFERENCES replay.INFO (__id__) ON DELETE CASCADE
 );

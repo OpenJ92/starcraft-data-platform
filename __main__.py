@@ -14,4 +14,4 @@ sc2reader.engine.register_plugin(APMTracker())
 sc2reader.engine.register_plugin(ContextLoader())
 sc2reader.engine.register_plugin(GameHeartNormalizer())
 
-replay = sc2reader.load_replay("example_5.SC2Replay")
+replay = sc2reader.load_replay("examples/example_5.SC2Replay")
