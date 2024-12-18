@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS events.BASIC_COMMAND_EVENT (
+CREATE TABLE IF NOT EXISTS events.basic_command_event (
     __id__ SERIAL PRIMARY KEY,         -- Auto-incrementing primary key
 
     pid INTEGER,                       -- Player ID
@@ -11,14 +11,14 @@ CREATE TABLE IF NOT EXISTS events.BASIC_COMMAND_EVENT (
     command_index INTEGER,             -- Command index
     ability_name TEXT,                 -- Name of the ability
 
-    __PLAYER__ INTEGER,                -- Foreign key to replay.PLAYER
-    __INFO__ INTEGER,                  -- Foreign key to replay.INFO
-    __ABILITY__ INTEGER,               -- Foreign key to datapack.ABILITY
+    __player__ INTEGER,                -- Foreign key to replay.PLAYER
+    __info__ INTEGER,                  -- Foreign key to replay.INFO
+    __ability__ INTEGER,               -- Foreign key to datapack.ABILITY
 
-    CONSTRAINT basic_command_event_player_fkey FOREIGN KEY (__PLAYER__)
+    CONSTRAINT basic_command_event_player_fkey FOREIGN KEY (__player__)
         REFERENCES replay.PLAYER (__id__) ON DELETE SET NULL,
-    CONSTRAINT basic_command_event_info_fkey FOREIGN KEY (__INFO__)
+    CONSTRAINT basic_command_event_info_fkey FOREIGN KEY (__info__)
         REFERENCES replay.INFO (__id__) ON DELETE CASCADE,
-    CONSTRAINT basic_command_event_ability_fkey FOREIGN KEY (__ABILITY__)
+    CONSTRAINT basic_command_event_ability_fkey FOREIGN KEY (__ability__)
         REFERENCES datapack.ABILITY (__id__) ON DELETE SET NULL
 );

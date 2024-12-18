@@ -5,7 +5,7 @@ from database.base import Base
 
 
 class map(Base):
-    __tablename__ = "MAP"
+    __tablename__ = "map"
     __table_args__ = {"schema": "replay"}
 
     __id__ = Column(Integer, primary_key=True)
