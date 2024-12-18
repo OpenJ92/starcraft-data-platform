@@ -34,3 +34,10 @@ class player(Base):
 
     __info__ = Column(Integer, ForeignKey("replay.info.__id__"))
     replay = relationship("info", back_populates="players")
+
+    basic_command_events = relationship("basic_command_event", back_populates="player")
+    chat_events = relationship("chat_event", back_populates="player")
+    player_stats_events = relationship("player_stats_event", back_populates="player")
+    player_leave_events = relationship("player_leave_event", back_populates="player")
+    unit_born_events = relationship("unit_born_event", back_populates="unit_controller")
+    unit_died_events = relationship("unit_died_event", back_populates="killing_player")

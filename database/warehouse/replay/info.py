@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, BigInteger, Float, Text, Boolean, DateTime
+from sqlalchemy import Column, Integer, BigInteger, Float, Text, Boolean, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 
 from database.base import Base
@@ -45,3 +45,17 @@ class info(Base):
 
     players = relationship("player", back_populates="replay")
     objects = relationship("object", back_populates="replay")
+
+    __map__ = Column(Integer, ForeignKey("replay.map.__id__"))
+    map = relationship("map", back_populates="replays")
+
+    basic_command_events = relationship("basic_command_event", back_populates="info")
+    chat_events = relationship("chat_event", back_populates="info")
+    player_stats_events = relationship("player_stats_event", back_populates="info")
+    player_leave_events = relationship("player_leave_event", back_populates="info")
+    player_setup_events = relationship("player_setup_event", back_populates="info")
+    upgrade_complete_events = relationship("upgrade_complete_event", back_populates="info")
+    unit_born_events = relationship("unit_born_event", back_populates="info")
+    unit_done_events = relationship("unit_done_event", back_populates="info")
+    unit_init_events = relationship("unit_init_event", back_populates="info")
+    unit_died_events = relationship("unit_died_event", back_populates="info")

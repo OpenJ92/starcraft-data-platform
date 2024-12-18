@@ -20,3 +20,5 @@ class ability(Base):
 
     __unit_type__ = Column(Integer, ForeignKey("datapack.unit_type.__id__"))
     build_unit = relationship("unit_type", back_populates="abilities")
+
+    basic_command_events = relationship("basic_command_event", back_populates="ability")
