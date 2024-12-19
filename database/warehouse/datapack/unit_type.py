@@ -1,12 +1,14 @@
 from sqlalchemy import Column, Integer, Text, Boolean, UniqueConstraint
 from sqlalchemy.orm import relationship
 
+from database.inject import Injectable
 from database.base import Base
 
-class unit_type(Base):
+class unit_type(Injectable, Base):
     __tablename__ = "unit_type"
+    __tableschema__ = "datapack"
     __table_args__ = ( UniqueConstraint("id", "release_string", name="unit_type_id_release_string_unique")
-                     , {"schema": "datapack"})
+                     , {"schema": __tableschema__} )
     __id__ = Column(Integer, primary_key=True)
 
     release_string = Column(Text)
@@ -24,3 +26,6 @@ class unit_type(Base):
 
     abilities = relationship("ability", back_populates="build_unit")
     objects = relationship("object", back_populates="unit_type")
+
+    def process(self):
+        pass
