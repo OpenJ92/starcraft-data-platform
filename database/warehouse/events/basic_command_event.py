@@ -9,7 +9,7 @@ from database.warehouse.replay.player import player
 
 
 class basic_command_event(Base):
-    __tablename__ = " basic_command_event"
+    __tablename__ = "basic_command_event"
     __table_args__ = {"schema": "events"}
 
     __id__ = Column(Integer, primary_key=True)

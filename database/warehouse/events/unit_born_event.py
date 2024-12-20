@@ -31,3 +31,6 @@ class unit_born_event(Base):
 
     __object__ = Column(Integer, ForeignKey("replay.object.__id__"))
     unit = relationship("object", back_populates="unit_born_events")
+
+    __player__ = Column(Integer, ForeignKey("replay.player.__id__"))
+    unit_controller = relationship("player", back_populates="unit_born_events")

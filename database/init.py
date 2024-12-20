@@ -28,5 +28,5 @@ with engine.connect() as connection:
     connection.execute("CREATE SCHEMA IF NOT EXISTS events;")
     connection.execute("CREATE SCHEMA IF NOT EXISTS replay;")
 
-# Create all tables
+# Create all warehouse tables
 Base.metadata.create_all(bind=engine)
