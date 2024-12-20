@@ -1,10 +1,15 @@
 from abc import ABC, abstractmethod
 
 class Injectable(ABC):
+    @classmethod
+    @property
+    @abstractmethod
+    def __tableschema__(cls):
+        """Return the schema name. Must be implemented by subclasses."""
+        pass
+
+    @classmethod
     @abstractmethod
     def process(cls, replay, session):
-        """
-        Process data for this ORM class.
-        Must be implemented by each derived class.
-        """
+        """Must be implemented by subclasses."""
         pass

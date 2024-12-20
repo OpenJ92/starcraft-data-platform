@@ -24,9 +24,8 @@ class InjectionManager():
         try:
             for relation in self.metadata.sorted_tables:
                 name = f"{relation.schema}.{relation.name}"
-                relation_cls = self.base.injectable[name]
-                breakpoint()
-                if issubclass(relation_cls, Injectable):
+                relation_cls = self.base.injectable.get(name)
+                if relation_cls and issubclass(relation_cls, Injectable):
                     relation_cls.process(replay, session)
                     session.flush()  # Flush after each relation
             session.commit()  # Commit transaction after all relations

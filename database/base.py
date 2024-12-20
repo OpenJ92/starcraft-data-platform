@@ -1,5 +1,6 @@
 from sqlalchemy.ext.declarative import as_declarative, declared_attr, DeclarativeMeta
 from sqlalchemy.orm import declarative_base
+
 from abc import ABCMeta
 
 # Combine DeclarativeMeta and ABCMeta into a single metaclass
