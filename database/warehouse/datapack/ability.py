@@ -25,5 +25,23 @@ class ability(Injectable, Base):
 
     basic_command_events = relationship("basic_command_event", back_populates="ability")
 
-    def process(self):
+    @classmethod
+    @property
+    def __tableschema__(self):
+        return "datapack"
+
+    @classmethod
+    def process_foreign_relations(cls, obj, session):
         pass
+
+    @classmethod
+    def process_existence(cls, replay, session):
+        statement = select(cls).where(cls.release_string == replay.release_string)
+        result = session.execute(statement)
+        return result.first() is not None
+
+    @classmethod
+    def extract_data(cls, replay, foreign_relations):
+        pass
+
+

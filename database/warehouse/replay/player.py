@@ -29,7 +29,7 @@ class player(Base):
 
     id = Column(Integer)
 
-    owner_objects = relationship( "object", primaryjoin="object.__owner__==player.__id__", back_populates="owner")
+    owned_objects = relationship( "object", primaryjoin="object.__owner__==player.__id__", back_populates="owner")
     killed_objects = relationship("object", primaryjoin="object.__killing_player__==player.__id__", back_populates="killing_player")
 
     __info__ = Column(Integer, ForeignKey("replay.info.__id__"))
@@ -41,3 +41,4 @@ class player(Base):
     player_leave_events = relationship("player_leave_event", back_populates="player")
     unit_born_events = relationship("unit_born_event", back_populates="unit_controller")
     unit_died_events = relationship("unit_died_event", back_populates="killing_player")
+    upgrade_complete_events = relationship("upgrade_complete_event", back_populates="player")
