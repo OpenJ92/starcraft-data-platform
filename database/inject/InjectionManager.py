@@ -15,7 +15,7 @@ class InjectionManager():
         ## self.sorted_relations = self._topological_sort()
 
 
-    def inject(self, replay, session):
+    async def inject(self, replay, session):
         """
         Perform the injection process for a replay.
         :param replay: Parsed replay object to inject.
@@ -26,11 +26,12 @@ class InjectionManager():
                 name = f"{relation.schema}.{relation.name}"
                 relation_cls = self.base.injectable.get(name)
                 if relation_cls and issubclass(relation_cls, Injectable):
-                    relation_cls.process(replay, session)
-                    session.flush()  # Flush after each relation
-            session.commit()  # Commit transaction after all relations
+                    await relation_cls.process(replay, session)
+                    await session.flush()  # Flush after each relation
+            await session.commit()  # Commit transaction after all relations
         except SQLAlchemyError as e:
-            session.rollback()  # Rollback transaction on error
+            breakpoint()
+            await session.rollback()  # Rollback transaction on error
             raise e  # Optionally re-raise or log the error
 
 
