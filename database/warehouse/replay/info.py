@@ -9,7 +9,7 @@ class info(Base):
     __tablename__ = "info"
     __table_args__ = {"schema": "replay"}
 
-    __id__ = Column(Integer, primary_key=True)
+    primary_id = Column(Integer, primary_key=True)
 
     filename = Column(Text)
     filehash = Column(Text)
@@ -46,7 +46,7 @@ class info(Base):
     players = relationship("player", back_populates="replay")
     objects = relationship("object", back_populates="replay")
 
-    __map__ = Column(Integer, ForeignKey("replay.map.__id__"))
+    map_id = Column(Integer, ForeignKey("replay.map.primary_id"))
     map = relationship("map", back_populates="replays")
 
     basic_command_events = relationship("basic_command_event", back_populates="info")

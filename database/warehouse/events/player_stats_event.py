@@ -7,7 +7,7 @@ class player_stats_event(Base):
     __tablename__ = "player_stats_event"
     __table_args__ = {"schema": "events"}
 
-    __id__ = Column(Integer, primary_key=True)
+    primary_id = Column(Integer, primary_key=True)
 
     name = Column(Text)
     second = Column(Float)
@@ -63,8 +63,8 @@ class player_stats_event(Base):
     ff_vespene_lost_economy = Column(Float)
     ff_vespene_lost_technology = Column(Float)
 
-    __player__ = Column(Integer, ForeignKey("replay.player.__id__"))
+    player_id = Column(Integer, ForeignKey("replay.player.primary_id"))
     player = relationship("player", back_populates="player_stats_events")
 
-    __info__ = Column(Integer, ForeignKey("replay.info.__id__"))
+    info_id = Column(Integer, ForeignKey("replay.info.primary_id"))
     info = relationship("info", back_populates="player_stats_events")
