@@ -1,5 +1,6 @@
 from sqlalchemy.ext.declarative import as_declarative, declared_attr, DeclarativeMeta
 from sqlalchemy.orm import declarative_base
+from sqlalchemy import MetaData
 
 from abc import ABCMeta
 
@@ -7,7 +8,7 @@ from abc import ABCMeta
 class DeclarativeABCMeta(DeclarativeMeta, ABCMeta):
     pass
 
-@as_declarative(metaclass=DeclarativeABCMeta)
+@as_declarative(metadata = MetaData(), metaclass=DeclarativeABCMeta)
 class Base:
     injectable = {}  # Dictionary to map table names to classes
 

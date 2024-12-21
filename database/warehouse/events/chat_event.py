@@ -11,7 +11,7 @@ class chat_event(Base):
     __tablename__ = "chat_event"
     __table_args__ = {"schema": "events"}
 
-    __id__ = Column(Integer, primary_key=True)
+    primary_id = Column(Integer, primary_key=True)
 
     pid = Column(Integer)
     frame = Column(Integer)
@@ -23,8 +23,8 @@ class chat_event(Base):
     to_allies = Column(Boolean)
     to_observers = Column(Boolean)
 
-    __player__ = Column(Integer, ForeignKey("replay.player.__id__"))
+    player_id = Column(Integer, ForeignKey("replay.player.primary_id"))
     player = relationship("player", back_populates="chat_events")
 
-    __info__ = Column(Integer, ForeignKey("replay.info.__id__"))
+    info_id = Column(Integer, ForeignKey("replay.info.primary_id"))
     info = relationship("info", back_populates="chat_events")

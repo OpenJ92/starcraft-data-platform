@@ -10,7 +10,7 @@ class ability(Injectable, Base):
     __table_args__ = ( UniqueConstraint("id", "release_string", name="ability_id_release_string_unique")
                      , {"schema": __tableschema__})
 
-    __id__ = Column(Integer, primary_key=True)
+    primary_id = Column(Integer, primary_key=True)
 
     release_string = Column(Text, nullable=False)
     id = Column(Integer, nullable=False)
@@ -20,7 +20,7 @@ class ability(Injectable, Base):
     is_build = Column(Boolean)
     build_time = Column(Integer)
 
-    __unit_type__ = Column(Integer, ForeignKey("datapack.unit_type.__id__"))
+    unit_type_id = Column(Integer, ForeignKey("datapack.unit_type.primary_id"))
     build_unit = relationship("unit_type", back_populates="abilities")
 
     basic_command_events = relationship("basic_command_event", back_populates="ability")
