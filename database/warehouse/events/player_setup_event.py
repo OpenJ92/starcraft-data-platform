@@ -9,7 +9,7 @@ class player_setup_event(Base):
     __tablename__ = "player_setup_event"
     __table_args__ = {"schema": "events"}
 
-    __id__ = Column(Integer, primary_key=True)
+    primary_id = Column(Integer, primary_key=True)
 
     pid = Column(Integer)
     frame = Column(Integer)
@@ -19,5 +19,5 @@ class player_setup_event(Base):
     uid = Column(Integer)
     sid = Column(Integer)
 
-    __info__ = Column(Integer, ForeignKey("replay.info.__id__"))
+    info_id = Column(Integer, ForeignKey("replay.info.primary_id"))
     info = relationship("info", back_populates="player_setup_events")

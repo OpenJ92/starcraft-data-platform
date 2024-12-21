@@ -11,7 +11,7 @@ class unit_died_event(Base):
     __tablename__ = "unit_died_event"
     __table_args__ = {"schema": "events"}
 
-    __id__ = Column(Integer, primary_key=True)
+    primary_id = Column(Integer, primary_key=True)
 
     frame = Column(Integer)
     second = Column(Integer)
@@ -23,21 +23,21 @@ class unit_died_event(Base):
     x = Column(Integer)
     y = Column(Integer)
 
-    __unit__ = Column(Integer, ForeignKey("replay.object.__id__"))
+    unit_id = Column(Integer, ForeignKey("replay.object.primary_id"))
     unit = relationship(
         "object",
-        primaryjoin="unit_died_event.__unit__==object.__id__",
+        primaryjoin="unit_died_event.unit_id==object.primary_id",
         back_populates="death_event",)
 
-    __killing_unit__ = Column(Integer, ForeignKey("replay.object.__id__"))
+    killing_unit_id = Column(Integer, ForeignKey("replay.object.primary_id"))
     killing_unit = relationship(
         "object",
-        primaryjoin="UnitDiedEvent.__killing_unit__==object.__id__",
+        primaryjoin="unit_died_event.killing_unit_id==object.primary_id",
         back_populates="kill_events",)
 
-    __info__ = Column(Integer, ForeignKey("replay.info.__id__"))
+    info_id = Column(Integer, ForeignKey("replay.info.primary_id"))
     info = relationship("info", back_populates="unit_died_events")
 
-    __player__ = Column(Integer, ForeignKey("replay.player.__id__"))
+    player_id = Column(Integer, ForeignKey("replay.player.primary_id"))
     killing_player = relationship("player", back_populates="unit_died_events")
 

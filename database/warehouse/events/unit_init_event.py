@@ -10,7 +10,7 @@ class unit_init_event(Base):
     __tablename__ = "unit_init_event"
     __table_args__ = {"schema": "events"}
 
-    __id__ = Column(Integer, primary_key=True)
+    primary_id = Column(Integer, primary_key=True)
 
     frame = Column(Integer)
     second = Column(Integer)
@@ -19,9 +19,9 @@ class unit_init_event(Base):
     unit_id_recycle = Column(Integer)
     unit_id = Column(Integer)
 
-    __info__ = Column(Integer, ForeignKey("replay.info.__id__"))
+    info_id = Column(Integer, ForeignKey("replay.info.primary_id"))
     info = relationship("info", back_populates="unit_init_events")
 
-    __object__ = Column(Integer, ForeignKey("replay.object.__id__"))
+    object_id = Column(Integer, ForeignKey("replay.object.primary_id"))
     unit = relationship("object", back_populates="unit_init_events")
 

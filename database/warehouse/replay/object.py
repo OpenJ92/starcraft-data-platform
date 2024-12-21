@@ -12,7 +12,7 @@ class object(Base):
     __tablename__ = "object"
     __table_args__ = {"schema": "replay"}
 
-    __id__ = Column(Integer, primary_key=True)
+    primary_id = Column(Integer, primary_key=True)
 
     id = Column(Integer)
     started_at = Column(Integer)
@@ -23,40 +23,39 @@ class object(Base):
     location_x = Column(Integer)
     location_y = Column(Integer)
 
-    __info__ = Column(Integer, ForeignKey("replay.info.__id__"))
+    info_id = Column(Integer, ForeignKey("replay.info.primary_id"))
     replay = relationship("info", back_populates="objects")
 
-    __owner__ = Column(Integer, ForeignKey("replay.player.__id__"))
+    owner_id = Column(Integer, ForeignKey("replay.player.primary_id"))
     owner = relationship(
         "player",
-        primaryjoin="object.__owner__==player.__id__",
+        primaryjoin="object.owner_id==player.primary_id",
         back_populates="owned_objects",)
 
-    __killing_player__ = Column(Integer, ForeignKey('replay.player.__id__'))
+    killing_player_id = Column(Integer, ForeignKey('replay.player.primary_id'))
     killing_player = relationship(
         "player",
-        primaryjoin='object.__killing_player__==player.__id__',
+        primaryjoin='object.killing_player_id==player.primary_id',
         back_populates='killed_objects')
 
-    __killing_unit__ = Column(Integer, ForeignKey("replay.object.__id__"), nullable=True)
-    killing_unit = relationship("object", remote_side=[__id__], backref="killed_units")
+    killing_unit_id = Column(Integer, ForeignKey("replay.object.primary_id"), nullable=True)
+    killing_unit = relationship("object", remote_side=[primary_id], backref="killed_units")
 
-    __unit_type__ = Column(Integer, ForeignKey("datapack.unit_type.__id__"))
+    unit_type_id = Column(Integer, ForeignKey("datapack.unit_type.primary_id"))
     unit_type = relationship(
         "unit_type",
-        primaryjoin='object.__unit_type__==unit_type.__id__',
+        primaryjoin='object.unit_type_id==unit_type.primary_id',
         back_populates="objects")
 
     unit_born_events = relationship("unit_born_event", back_populates="unit")
     unit_done_events = relationship("unit_done_event", back_populates="unit")
     unit_init_events = relationship("unit_init_event", back_populates="unit")
     death_event = relationship(
-        "unit_died_event",
-        primaryjoin="UnitDiedEvent.__UNIT__==OBJECT.__id__",
+        "unit_died_event", primaryjoin="unit_died_event.unit_id==object.primary_id",
         back_populates="unit",
     )
     kill_events = relationship(
         "unit_died_event",
-        primaryjoin="UnitDiedEvent.__KILLING_UNIT__==OBJECT.__id__",
+        primaryjoin="unit_died_event.killing_unit_id==object.primary_id",
         back_populates="killing_unit",
     )

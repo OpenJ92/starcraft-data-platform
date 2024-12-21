@@ -1,6 +1,8 @@
 import os
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.ext.asyncio import async_sessionmaker
+
+
 
 # Base Configuration Class
 class Config:
@@ -12,9 +14,9 @@ class Config:
     DB_NAME = os.getenv("DB_NAME", "default_database")  # Default database name
 
     @classmethod
-    def get_connection_string(cls):
-        """Constructs the connection string dynamically."""
-        return f"postgresql://{cls.DB_USER}:{cls.DB_PASSWORD}@{cls.DB_HOST}:{cls.DB_PORT}/{cls.DB_NAME}"
+    def get_connection_string(cls, async_mode=False):
+        protocol = "postgresql+asyncpg" if async_mode else "postgresql"
+        return f"{protocol}://{cls.DB_USER}:{cls.DB_PASSWORD}@{cls.DB_HOST}:{cls.DB_PORT}/{cls.DB_NAME}"
 
 
 # Development Configuration
@@ -48,8 +50,8 @@ ENV = os.getenv("APP_ENV", "development")  # Default to 'development' if APP_ENV
 CurrentConfig = configurations[ENV]
 
 # Initialize SQLAlchemy Engine
-engine = create_engine(CurrentConfig.get_connection_string())
+# Create an async engine
+engine = create_async_engine(CurrentConfig.get_connection_string(async_mode=True))
 
 # Create a Session Factory
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
+SessionLocal = async_sessionmaker(autocommit=False, autoflush=False, bind=engine)

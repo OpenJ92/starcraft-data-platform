@@ -9,10 +9,10 @@ from database.warehouse.replay.player import player
 
 
 class basic_command_event(Base):
-    __tablename__ = " basic_command_event"
+    __tablename__ = "basic_command_event"
     __table_args__ = {"schema": "events"}
 
-    __id__ = Column(Integer, primary_key=True)
+    primary_id = Column(Integer, primary_key=True)
 
     pid = Column(Integer)
     frame = Column(Integer)
@@ -24,12 +24,12 @@ class basic_command_event(Base):
     command_index = Column(Integer)
     ability_name = Column(Text)
 
-    __player__ = Column(Integer, ForeignKey("replay.player.__id__"))
+    player_id = Column(Integer, ForeignKey("replay.player.primary_id"))
     player = relationship("player", back_populates="basic_command_events")
 
-    __info__ = Column(Integer, ForeignKey("replay.info.__id__"))
+    info_id = Column(Integer, ForeignKey("replay.info.primary_id"))
     info = relationship("info", back_populates="basic_command_events")
 
-    __ability__ = Column(Integer, ForeignKey("datapack.ability.__id__"))
+    ability_id = Column(Integer, ForeignKey("datapack.ability.primary_id"))
     ability = relationship("ability", back_populates="basic_command_events")
 

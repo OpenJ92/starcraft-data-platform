@@ -8,7 +8,7 @@ class map(Base):
     __tablename__ = "map"
     __table_args__ = {"schema": "replay"}
 
-    __id__ = Column(Integer, primary_key=True)
+    primary_id = Column(Integer, primary_key=True)
 
     filename = Column(Text)
     filehash = Column(Text)

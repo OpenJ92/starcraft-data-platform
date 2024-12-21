@@ -1,5 +1,4 @@
 from sqlalchemy import create_engine
-from database.base import Base
 
 from database.warehouse.datapack.unit_type import unit_type
 from database.warehouse.datapack.ability import ability
@@ -21,12 +20,24 @@ from database.warehouse.events.unit_init_event import unit_init_event
 from database.warehouse.events.upgrade_complete_event import upgrade_complete_event
 
 from database.config import engine
+from database.base import Base
 
-#create schema
-with engine.connect() as connection:
-    connection.execute("CREATE SCHEMA IF NOT EXISTS datapack;")
-    connection.execute("CREATE SCHEMA IF NOT EXISTS events;")
-    connection.execute("CREATE SCHEMA IF NOT EXISTS replay;")
+import asyncio
+from sqlalchemy.sql import text
 
-# Create all tables
-Base.metadata.create_all(bind=engine)
+async def init_db():
+    """Asynchronously initialize the database schema."""
+
+    async with engine.begin() as conn:
+        # Create schemas if they do not exist
+        await conn.execute(text("CREATE SCHEMA IF NOT EXISTS datapack;"))
+        await conn.execute(text("CREATE SCHEMA IF NOT EXISTS events;"))
+        await conn.execute(text("CREATE SCHEMA IF NOT EXISTS replay;"))
+
+        # Create all tables
+        await conn.run_sync(Base.metadata.create_all)
+
+    await engine.dispose()
+
+if __name__ == "__main__":
+    asyncio.run(init_db())
