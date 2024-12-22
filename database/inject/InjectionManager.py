@@ -1,4 +1,5 @@
 from sqlalchemy.exc import  SQLAlchemyError, IntegrityError, OperationalError
+from asyncio import gather, Event
 
 from database.inject.Injectable import Injectable
 
@@ -66,15 +67,17 @@ class EventInjectionManager:
 
             if relation_cls and issubclass(relation_cls, Injectable):
                 # Define dependencies from the class relationships
-                dependencies = [
-                    dep.__tablename__ for dep in relation_cls.foreign_relations()
-                ]
+                dependencies = []
+                for dependency in relation.foreign_key_constraints:
+                    fkey = f"{dependency.referred_table.schema}.{dependency.referred_table.name}"
+                    dependencies.append(fkey)
+                    breakpoint()
 
                 # Inject the current relation
                 tasks.append(self._inject_relation(relation_cls, replay, session, dependencies))
 
         # Run all tasks concurrently
-        await asyncio.gather(*tasks)
+        await gather(*tasks)
         await session.commit()
 
     async def _inject_relation(self, relation_cls, replay, session, dependencies):
