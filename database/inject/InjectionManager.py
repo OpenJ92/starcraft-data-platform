@@ -60,8 +60,7 @@ class EventInjectionManager:
         :param session: Database session supporting flush, commit, and rollback.
         """
         tasks = []
-        for relation in self.metadata.sorted_tables:
-            name = f"{relation.schema}.{relation.name}"
+        for name, relation in self.metadata.tables.items():
             relation_cls = self.base.injectable.get(name)
 
             if relation_cls and issubclass(relation_cls, Injectable):
@@ -100,7 +99,6 @@ class EventInjectionManager:
             # Signal that this relation is complete
             name = f"{relation_cls.__tableschema__}.{relation_cls.__tablename__}"
             self._get_event(name).set()
-            breakpoint()
 
 ## ## Consider Supplying a "Base" at each level of the database via __init__.py file
 ## class InjectionManagerFactory():
