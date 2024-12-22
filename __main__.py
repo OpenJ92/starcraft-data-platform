@@ -25,7 +25,8 @@ async def main():
 
     # Create the InjectionManager and inject the replay
     print("Injecting replay data...")
-    manager = InjectionManager(Base)
+    ## manager = InjectionManager(Base)
+    manager = EventInjectionManager(Base)
 
     async with SessionLocal() as session:
         await manager.inject(replay, session)
