@@ -1,4 +1,3 @@
-from sqlalchemy.exc import  SQLAlchemyError, IntegrityError, OperationalError
 from asyncio import gather, Event
 
 from database.inject.Injectable import Injectable
@@ -71,7 +70,6 @@ class EventInjectionManager:
                 for dependency in relation.foreign_key_constraints:
                     fkey = f"{dependency.referred_table.schema}.{dependency.referred_table.name}"
                     dependencies.append(fkey)
-                    breakpoint()
 
                 # Inject the current relation
                 tasks.append(self._inject_relation(relation_cls, replay, session, dependencies))
@@ -100,7 +98,9 @@ class EventInjectionManager:
             print(f"Error processing {relation_cls.__tablename__}: {e}")
         finally:
             # Signal that this relation is complete
-            self._get_event(relation_cls.__tablename__).set()
+            name = f"{relation_cls.__tableschema__}.{relation_cls.__tablename__}"
+            self._get_event(name).set()
+            breakpoint()
 
 ## ## Consider Supplying a "Base" at each level of the database via __init__.py file
 ## class InjectionManagerFactory():

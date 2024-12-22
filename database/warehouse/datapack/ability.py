@@ -31,7 +31,7 @@ class ability(Injectable, Base):
         return "datapack"
 
     @classmethod
-    def process_foreign_relations(cls, obj, session):
+    async def process(cls, replay, session):
         pass
 
     @classmethod
@@ -39,9 +39,4 @@ class ability(Injectable, Base):
         statement = select(cls).where(cls.release_string == replay.release_string)
         result = session.execute(statement)
         return result.first() is not None
-
-    @classmethod
-    def extract_data(cls, replay, foreign_relations):
-        pass
-
 

@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, Text, Boolean, UniqueConstraint, PrimaryKeyConstraint
+from sqlalchemy.exc import  SQLAlchemyError, IntegrityError, OperationalError
 from sqlalchemy.future import select
 from sqlalchemy.orm import relationship
 
@@ -47,6 +48,7 @@ class unit_type(Base, Injectable):
                     units.append(cls(release_string=release_string, **vars(unit)))
 
                 session.add_all(units)
+                breakpoint()
 
             except IntegrityError as e:
                 await session.rollback()
