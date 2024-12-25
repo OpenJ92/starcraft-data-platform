@@ -14,26 +14,24 @@ class player(Base):
     is_human = Column(Boolean)
     is_observer = Column(Boolean)
     is_referee = Column(Boolean)
-    region = Column(Text)
-    subregion = Column(Integer)
     toon_id = Column(BigInteger)
-    uid = Column(Integer)
     clan_tag = Column(Text)
-    name = Column(Text)
     combined_race_levels = Column(BigInteger)
     highest_league = Column(Integer)
+    scaled_rating = Column(Integer)
     pid = Column(Integer)
     result = Column(Text)
     pick_race = Column(Text)
     play_race = Column(Text)
 
-    id = Column(Integer)
+    info_id = Column(Integer, ForeignKey("replay.info.primary_id"))
+    replay = relationship("info", back_populates="players")
+
+    user_id = Column(Integer, ForeignKey("replay.user.primary_id"))
+    user = relationship("user", back_populates="players")
 
     owned_objects = relationship( "object", primaryjoin="object.owner_id==player.primary_id", back_populates="owner")
     killed_objects = relationship("object", primaryjoin="object.killing_player_id==player.primary_id", back_populates="killing_player")
-
-    info_id = Column(Integer, ForeignKey("replay.info.primary_id"))
-    replay = relationship("info", back_populates="players")
 
     basic_command_events = relationship("basic_command_event", back_populates="player")
     chat_events = relationship("chat_event", back_populates="player")

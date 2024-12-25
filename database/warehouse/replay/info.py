@@ -122,8 +122,7 @@ class info(Injectable, Base):
         return parameters
 
     columns = \
-        { "id"
-        , "filename"
+        { "filename"
         , "filehash"
         , "load_level"
         , "speed"

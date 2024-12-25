@@ -33,3 +33,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+    replay = sc2reader.load_replay("examples/example_5.SC2Replay", load_map=True)
