@@ -73,7 +73,7 @@ class unit_type(Base, Injectable):
     def get_unique(cls, replay):
         units = {}
         for _, unit in replay.datapack.units.items():
-            if unit.id not in units.keys():
+            if unit.race != 'Neutral':
                 units[unit.id] = unit
         return units
 

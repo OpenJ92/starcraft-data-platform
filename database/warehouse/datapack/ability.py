@@ -58,7 +58,6 @@ class ability(Injectable, Base):
         except Exception as e:
             await session.rollback()
             print(f"Unexpected error: {e}")
-            breakpoint()
             # Gracefully handle all other exceptions
 
     @classmethod
@@ -71,7 +70,7 @@ class ability(Injectable, Base):
     async def process_dependancies(cls, ability, replay, session):
         unit = ability.build_unit
         if not unit:
-            return { "unit_type_id" : None}
+            return { "unit_type_id" : None }
 
         statement = select(unit_type).where(
                 and_(unit_type.release_string == replay.release_string, unit_type.id == unit.id))
@@ -79,7 +78,7 @@ class ability(Injectable, Base):
         unit      = result.scalar()
 
         if not unit:
-            return { "unit_type_id" : None}
+            return { "unit_type_id" : None }
 
         return { "unit_type_id" : unit.primary_id }
 
