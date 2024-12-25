@@ -64,7 +64,7 @@ class ability(Injectable, Base):
     async def process_existence(cls, replay, session):
         statement = select(cls).where(cls.release_string == replay.release_string)
         result = await session.execute(statement)
-        return result.first()
+        return result.scalar()
 
     @classmethod
     async def process_dependancies(cls, ability, replay, session):

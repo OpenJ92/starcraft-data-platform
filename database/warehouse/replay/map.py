@@ -39,7 +39,6 @@ class map(Injectable, Base):
                     return
 
                 data = cls.get_data(replay.map)
-                breakpoint()
                 session.add(cls(**data))
 
             except IntegrityError as e:
@@ -59,7 +58,6 @@ class map(Injectable, Base):
     async def process_existence(cls, filehash, session):
         statement = select(cls).where(cls.filehash == filehash)
         result = await session.execute(statement)
-        breakpoint()
         return result.scalar()
 
     @classmethod
