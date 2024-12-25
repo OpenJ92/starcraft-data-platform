@@ -1,6 +1,9 @@
-from sqlalchemy import Column, Integer, Text, Boolean, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, Integer, Text, Boolean, ForeignKey, UniqueConstraint, and_
+from sqlalchemy.future import select
+from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.orm import relationship
 
+from database.warehouse.datapack.unit_type import unit_type
 from database.inject import Injectable
 from database.base import Base
 
@@ -32,11 +35,70 @@ class ability(Injectable, Base):
 
     @classmethod
     async def process(cls, replay, session):
-        pass
+        try:
+            if await cls.process_existence(replay, session):
+                return
+
+            abilities = []
+            for _, ability in replay.datapack.abilities.items():
+                data = cls.get_data(ability)
+                parents = await cls.process_dependancies(ability, replay, session)
+                abilities.append(cls(release_string=replay.release_string, **data, **parents))
+
+            session.add_all(abilities)
+
+        except IntegrityError as e:
+            await session.rollback()
+            print(f"IntegrityError: {e.orig}")
+            # Handle specific cases like unique constraint violations
+        except OperationalError as e:
+            await session.rollback()
+            print(f"OperationalError: {e.orig}")
+            # Handle deadlocks or connection issues
+        except Exception as e:
+            await session.rollback()
+            print(f"Unexpected error: {e}")
+            breakpoint()
+            # Gracefully handle all other exceptions
 
     @classmethod
-    def process_existence(cls, replay, session):
+    async def process_existence(cls, replay, session):
         statement = select(cls).where(cls.release_string == replay.release_string)
-        result = session.execute(statement)
-        return result.first() is not None
+        result = await session.execute(statement)
+        return result.first()
+
+    @classmethod
+    async def process_dependancies(cls, ability, replay, session):
+        unit = ability.build_unit
+        if not unit:
+            return { "unit_type_id" : None}
+
+        statement = select(unit_type).where(
+                and_(unit_type.release_string == replay.release_string, unit_type.id == unit.id))
+        result    = await session.execute(statement)
+        unit      = result.scalar()
+
+        if not unit:
+            return { "unit_type_id" : None}
+
+        return { "unit_type_id" : unit.primary_id }
+
+
+    @classmethod
+    def get_data(cls, obj):
+        parameters = {}
+        for variable, value in vars(obj).items():
+            if variable in cls.columns:
+                parameters[variable] = value
+        return parameters
+
+    columns = \
+        { "id"
+        , "version"
+        , "name"
+        , "title"
+        , "is_build"
+        , "build_time"
+        }
+
 
