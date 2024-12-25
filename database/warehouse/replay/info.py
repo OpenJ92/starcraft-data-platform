@@ -1,11 +1,14 @@
 from sqlalchemy import Column, Integer, BigInteger, Float, Text, Boolean, DateTime, ForeignKey
+from sqlalchemy.future import select
+from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.orm import relationship
 
-from database.base import Base
 from database.warehouse.replay.map import map
+from database.inject import Injectable
+from database.base import Base
 
 
-class info(Base):
+class info(Injectable, Base):
     __tablename__ = "info"
     __table_args__ = {"schema": "replay"}
 
@@ -21,7 +24,6 @@ class info(Base):
     category = Column(Text)
     is_ladder = Column(Boolean)
     is_private = Column(Boolean)
-    map_hash = Column(Text)
     region = Column(Text)
     game_fps = Column(Float)
     frames = Column(Integer)
@@ -59,3 +61,96 @@ class info(Base):
     unit_done_events = relationship("unit_done_event", back_populates="info")
     unit_init_events = relationship("unit_init_event", back_populates="info")
     unit_died_events = relationship("unit_died_event", back_populates="info")
+
+    @classmethod
+    @property
+    def __tableschema__(self):
+        return "replay"
+
+    @classmethod
+    async def process(cls, replay, session):
+        try:
+            if await cls.process_existence(replay, session):
+                return
+
+            data = cls.get_data(replay)
+            parents = await cls.process_dependancies(replay, replay, session)
+            session.add(cls(**data, **parents))
+
+        except IntegrityError as e:
+            await session.rollback()
+            print(f"IntegrityError: {e.orig}")
+            # Handle specific cases like unique constraint violations
+        except OperationalError as e:
+            await session.rollback()
+            print(f"OperationalError: {e.orig}")
+            # Handle deadlocks or connection issues
+        except Exception as e:
+            await session.rollback()
+            print(f"Unexpected error: {e}")
+            # Gracefully handle all other exceptions
+
+
+    @classmethod
+    async def process_existence(cls, replay, session):
+        statement = select(cls).where(cls.filehash == replay.filehash)
+        result = await session.execute(statement)
+        return result.scalar()
+
+    @classmethod
+    async def process_dependancies(cls, obj, replay, session):
+        _map = obj.map
+        if not _map:
+            return { "map_id" : None }
+
+        statement = select(map).where(map.filehash == _map.filehash)
+        result = await session.execute(statement)
+        _map = result.scalar()
+
+        if not _map:
+            return { "map_id" : None }
+
+        return { "map_id" : _map.primary_id }
+
+
+    @classmethod
+    def get_data(cls, obj):
+        parameters = {}
+        for variable, value in vars(obj).items():
+            if variable in cls.columns:
+                parameters[variable] = value
+        return parameters
+
+    columns = \
+        { "id"
+        , "filename"
+        , "filehash"
+        , "load_level"
+        , "speed"
+        , "type"
+        , "game_type"
+        , "real_type"
+        , "category"
+        , "is_ladder"
+        , "is_private"
+        , "region"
+        , "game_fps"
+        , "frames"
+        , "build"
+        , "base_build"
+        , "release_string"
+        , "amm"
+        , "competitive"
+        , "practice"
+        , "cooperative"
+        , "battle_net"
+        , "hero_duplicates_allowed"
+        , "map_name"
+        , "expansion"
+        , "windows_timestamp"
+        , "unix_timestamp"
+        , "end_time"
+        , "time_zone"
+        , "start_time"
+        , "date"
+        }
