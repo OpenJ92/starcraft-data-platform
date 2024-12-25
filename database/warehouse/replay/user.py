@@ -3,8 +3,6 @@ from sqlalchemy.future import select
 from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.orm import relationship
 
-from sqlalchemy.orm import relationship
-
 from database.inject import Injectable
 from database.base import Base
 
@@ -29,7 +27,6 @@ class user(Injectable, Base):
     @classmethod
     async def process(cls, replay, session):
         try:
-
             users = []
             for player in replay.players:
                 if await cls.process_existence(player, session):
