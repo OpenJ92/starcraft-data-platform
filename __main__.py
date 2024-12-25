@@ -21,12 +21,11 @@ async def main():
     await init_db()
 
     # Load the replay
-    replay = sc2reader.load_replay("examples/example_5.SC2Replay")
+    replay = sc2reader.load_replay("examples/example_5.SC2Replay", load_map=True)
 
     # Create the InjectionManager and inject the replay
     print("Injecting replay data...")
     manager = InjectionManager(Base)
-
     async with SessionLocal() as session:
         await manager.inject(replay, session)
 
