@@ -21,8 +21,8 @@ class InjectionManager():
         :param session: Database session supporting flush, commit and rollback:
         """
 
-        self.prepare(replay)
-        breakpoint()
+        ## constuct and attach hashmap of events w/event.name
+        self._prepare(replay)
 
         try:
             for relation in self.metadata.sorted_tables:
@@ -38,11 +38,13 @@ class InjectionManager():
             print(f"Unexpected error: {e}")
             # Gracefully handle all other exceptions
 
-    def prepare(self, replay):
+    def _prepare(self, replay):
         replay.events_dictionary = defaultdict(list)
 
         for event in replay.events:
             replay.events_dictionary[event.name].append(event)
+
+        del replay.events
 
 
 ## ## Consider Supplying a "Base" at each level of the database via __init__.py file

@@ -35,8 +35,11 @@ class map(Injectable, Base):
     async def process(cls, replay, session):
         async with cls._lock:
             try:
-                if await cls.process_existence(replay.map.filehash, session):
+                if await cls.process_existence(replay.map_hash, session):
                     return
+
+                # Load map if not exists
+                replay.load_map()
 
                 data = cls.get_data(replay.map)
                 session.add(cls(**data))
