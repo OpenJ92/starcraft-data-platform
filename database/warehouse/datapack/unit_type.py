@@ -3,13 +3,10 @@ from sqlalchemy.exc import  SQLAlchemyError, IntegrityError, OperationalError
 from sqlalchemy.future import select
 from sqlalchemy.orm import relationship
 
-from asyncio import Lock
-
 from database.inject import Injectable
 from database.base import Base
 
 class unit_type(Base, Injectable):
-    _lock = Lock()
     __tablename__ = "unit_type"
     __table_args__ = ( UniqueConstraint("id", "release_string", name="unit_type_id_release_string_unique")
                      , { "schema": 'datapack' } )
@@ -38,30 +35,14 @@ class unit_type(Base, Injectable):
 
     @classmethod
     async def process(cls, replay, session):
-        async with cls._lock:
-            try:
-                if await cls.process_existence(replay, session):
-                    return
+        if await cls.process_existence(replay, session):
+            return
 
-                units = []
-                for _, unit in unit_type.get_unique(replay).items():
-                    data = cls.get_data(unit)
-                    units.append(cls(release_string=replay.release_string, **data))
-                session.add_all(units)
-
-            except IntegrityError as e:
-                await session.rollback()
-                print(f"IntegrityError: {e.orig}")
-                # Handle specific cases like unique constraint violations
-            except OperationalError as e:
-                await session.rollback()
-                print(f"OperationalError: {e.orig}")
-                # Handle deadlocks or connection issues
-            except Exception as e:
-                await session.rollback()
-                print(f"Unexpected error: {e}")
-                # Gracefully handle all other exceptions
-
+        units = []
+        for _, unit in unit_type.get_unique(replay).items():
+            data = cls.get_data(unit)
+            units.append(cls(release_string=replay.release_string, **data))
+        session.add_all(units)
 
     @classmethod
     async def process_existence(cls, replay, session):
@@ -76,15 +57,6 @@ class unit_type(Base, Injectable):
             if unit.race != 'Neutral':
                 units[unit.id] = unit
         return units
-
-    @classmethod
-    def get_data(cls, obj):
-        parameters = {}
-        for variable, value in vars(obj).items():
-            if variable in cls.columns:
-                parameters[variable] = value
-        return parameters
-
 
     columns = \
         { "id"

@@ -1,4 +1,5 @@
 from asyncio import gather, Event
+from collections import defaultdict
 
 from database.inject.Injectable import Injectable
 
@@ -19,6 +20,10 @@ class InjectionManager():
         :param replay: Parsed replay object to inject.
         :param session: Database session supporting flush, commit and rollback:
         """
+
+        ## constuct and attach hashmap of events w/event.name
+        self._prepare(replay)
+
         try:
             for relation in self.metadata.sorted_tables:
                 name = f"{relation.schema}.{relation.name}"
@@ -32,6 +37,14 @@ class InjectionManager():
             await session.rollback()
             print(f"Unexpected error: {e}")
             # Gracefully handle all other exceptions
+
+    def _prepare(self, replay):
+        replay.events_dictionary = defaultdict(list)
+
+        for event in replay.events:
+            replay.events_dictionary[event.name].append(event)
+
+        del replay.events
 
 
 ## ## Consider Supplying a "Base" at each level of the database via __init__.py file
