@@ -20,9 +20,6 @@ class object(Base):
     died_at = Column(Integer)
     name = Column(Text)
 
-    location_x = Column(Integer)
-    location_y = Column(Integer)
-
     info_id = Column(Integer, ForeignKey("replay.info.primary_id"))
     replay = relationship("info", back_populates="objects")
 
@@ -59,3 +56,8 @@ class object(Base):
         primaryjoin="unit_died_event.killing_unit_id==object.primary_id",
         back_populates="killing_unit",
     )
+
+    @classmethod
+    @property
+    def __tableschema__(self):
+        return "replay"

@@ -4,6 +4,7 @@ from database.warehouse.datapack.unit_type import unit_type
 from database.warehouse.datapack.ability import ability
 
 from database.warehouse.replay.map import map
+from database.warehouse.replay.user import user
 from database.warehouse.replay.info import info
 from database.warehouse.replay.player import player
 from database.warehouse.replay.object import object
