@@ -52,27 +52,15 @@ class player(Injectable, Base):
 
     @classmethod
     async def process(cls, replay, session):
-        try:
-            players = []
-            for player in replay.players:
-                data = cls.get_data(player)
-                parents = await cls.process_dependancies(player, replay, session)
-                players.append(cls(**data, **parents))
+        players = []
+        for player in replay.players:
+            data = cls.get_data(player)
+            data["scaled_rating"]= player.init_data.get("scaled_rating")
+            parents = await cls.process_dependancies(player, replay, session)
+            players.append(cls(**data, **parents))
 
-            session.add_all(players)
+        session.add_all(players)
 
-        except IntegrityError as e:
-            await session.rollback()
-            print(f"IntegrityError: {e.orig}")
-            # Handle specific cases like unique constraint violations
-        except OperationalError as e:
-            await session.rollback()
-            print(f"OperationalError: {e.orig}")
-            # Handle deadlocks or connection issues
-        except Exception as e:
-            await session.rollback()
-            print(f"Unexpected error: {e}")
-            # Gracefully handle all other exceptions
 
 
     @classmethod
@@ -93,16 +81,6 @@ class player(Injectable, Base):
         parents['info_id'] = _info.primary_id
 
         return parents
-
-    @classmethod
-    def get_data(cls, obj):
-        parameters = defaultdict(lambda:None)
-        for variable, value in vars(obj).items():
-            if variable in cls.columns:
-                parameters[variable] = value
-        parameters["scaled_rating"]= obj.init_data.get("scaled_rating")
-        return parameters
-
 
     columns = \
         { "team_id"

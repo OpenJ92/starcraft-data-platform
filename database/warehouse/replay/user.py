@@ -26,29 +26,15 @@ class user(Injectable, Base):
 
     @classmethod
     async def process(cls, replay, session):
-        try:
-            users = []
-            for player in replay.players:
-                if await cls.process_existence(player, session):
-                    continue
+        users = []
+        for player in replay.players:
+            if await cls.process_existence(player, session):
+                continue
 
-                data = cls.get_data(player)
-                users.append(cls(**data))
+            data = cls.get_data(player)
+            users.append(cls(**data))
 
-            session.add_all(users)
-
-        except IntegrityError as e:
-            await session.rollback()
-            print(f"IntegrityError: {e.orig}")
-            # Handle specific cases like unique constraint violations
-        except OperationalError as e:
-            await session.rollback()
-            print(f"OperationalError: {e.orig}")
-            # Handle deadlocks or connection issues
-        except Exception as e:
-            await session.rollback()
-            print(f"Unexpected error: {e}")
-            # Gracefully handle all other exceptions
+        session.add_all(users)
 
 
     @classmethod

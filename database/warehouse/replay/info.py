@@ -3,6 +3,8 @@ from sqlalchemy.future import select
 from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.orm import relationship
 
+from collections import defaultdict
+
 from database.warehouse.replay.map import map
 from database.inject import Injectable
 from database.base import Base
@@ -69,27 +71,13 @@ class info(Injectable, Base):
 
     @classmethod
     async def process(cls, replay, session):
-        try:
-            if await cls.process_existence(replay, session):
-                return
+        if await cls.process_existence(replay, session):
+            return
 
-            data = cls.get_data(replay)
-            parents = await cls.process_dependancies(replay, replay, session)
-            session.add(cls(**data, **parents))
+        data = cls.get_data(replay)
+        parents = await cls.process_dependancies(replay, replay, session)
 
-        except IntegrityError as e:
-            await session.rollback()
-            print(f"IntegrityError: {e.orig}")
-            # Handle specific cases like unique constraint violations
-        except OperationalError as e:
-            await session.rollback()
-            print(f"OperationalError: {e.orig}")
-            # Handle deadlocks or connection issues
-        except Exception as e:
-            await session.rollback()
-            print(f"Unexpected error: {e}")
-            # Gracefully handle all other exceptions
-
+        session.add(cls(**data, **parents))
 
     @classmethod
     async def process_existence(cls, replay, session):
@@ -99,27 +87,17 @@ class info(Injectable, Base):
 
     @classmethod
     async def process_dependancies(cls, obj, replay, session):
-        _map = obj.map
-        if not _map:
-            return { "map_id" : None }
+        _map, parents = obj.map_hash, defaultdict(lambda: None)
 
-        statement = select(map).where(map.filehash == _map.filehash)
-        result = await session.execute(statement)
-        _map = result.scalar()
+        statement = select(map).where(map.filehash == _map)
+        result    = await session.execute(statement)
+        _map      = result.scalar()
 
         if not _map:
             return { "map_id" : None }
 
-        return { "map_id" : _map.primary_id }
-
-
-    @classmethod
-    def get_data(cls, obj):
-        parameters = {}
-        for variable, value in vars(obj).items():
-            if variable in cls.columns:
-                parameters[variable] = value
-        return parameters
+        parents["map_id"] = _map.primary_id
+        return parents
 
     columns = \
         { "filename"

@@ -21,7 +21,7 @@ async def main():
     await init_db()
 
     # Load the replay
-    replay = sc2reader.load_replay("examples/example_5.SC2Replay", load_map=True)
+    replay = sc2reader.load_replay("examples/example_5.SC2Replay", load_map=False)
 
     # Create the InjectionManager and inject the replay
     print("Injecting replay data...")
@@ -33,4 +33,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-    replay = sc2reader.load_replay("examples/example_5.SC2Replay", load_map=True)

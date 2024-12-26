@@ -35,30 +35,16 @@ class ability(Injectable, Base):
 
     @classmethod
     async def process(cls, replay, session):
-        try:
-            if await cls.process_existence(replay, session):
-                return
+        if await cls.process_existence(replay, session):
+            return
 
-            abilities = []
-            for _, ability in replay.datapack.abilities.items():
-                data = cls.get_data(ability)
-                parents = await cls.process_dependancies(ability, replay, session)
-                abilities.append(cls(release_string=replay.release_string, **data, **parents))
+        abilities = []
+        for _, ability in replay.datapack.abilities.items():
+            data = cls.get_data(ability)
+            parents = await cls.process_dependancies(ability, replay, session)
+            abilities.append(cls(release_string=replay.release_string, **data, **parents))
 
-            session.add_all(abilities)
-
-        except IntegrityError as e:
-            await session.rollback()
-            print(f"IntegrityError: {e.orig}")
-            # Handle specific cases like unique constraint violations
-        except OperationalError as e:
-            await session.rollback()
-            print(f"OperationalError: {e.orig}")
-            # Handle deadlocks or connection issues
-        except Exception as e:
-            await session.rollback()
-            print(f"Unexpected error: {e}")
-            # Gracefully handle all other exceptions
+        session.add_all(abilities)
 
     @classmethod
     async def process_existence(cls, replay, session):
@@ -81,15 +67,6 @@ class ability(Injectable, Base):
             return { "unit_type_id" : None }
 
         return { "unit_type_id" : unit.primary_id }
-
-
-    @classmethod
-    def get_data(cls, obj):
-        parameters = {}
-        for variable, value in vars(obj).items():
-            if variable in cls.columns:
-                parameters[variable] = value
-        return parameters
 
     columns = \
         { "id"
