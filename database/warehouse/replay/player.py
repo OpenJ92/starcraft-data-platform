@@ -35,7 +35,6 @@ class player(Injectable, Base):
     user = relationship("user", back_populates="players")
 
     owned_objects = relationship( "object", primaryjoin="object.owner_id==player.primary_id", back_populates="owner")
-    killed_objects = relationship("object", primaryjoin="object.killing_player_id==player.primary_id", back_populates="killing_player")
 
     basic_command_events = relationship("basic_command_event", back_populates="player")
     chat_events = relationship("chat_event", back_populates="player")
@@ -69,12 +68,11 @@ class player(Injectable, Base):
         parents = defaultdict(lambda:None)
 
         user_statement = select(user).where(user.uid == _uid)
-        info_statement = select(info).where(info.filehash == _filehash)
-
         user_result = await session.execute(user_statement)
-        info_result = await session.execute(info_statement)
-
         _user = user_result.scalar()
+
+        info_statement = select(info).where(info.filehash == _filehash)
+        info_result = await session.execute(info_statement)
         _info = info_result.scalar()
 
         parents['user_id'] = _user.primary_id
