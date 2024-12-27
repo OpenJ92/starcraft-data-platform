@@ -41,7 +41,6 @@ class player(Injectable, Base):
     player_stats_events = relationship("player_stats_event", back_populates="player")
     player_leave_events = relationship("player_leave_event", back_populates="player")
     unit_born_events = relationship("unit_born_event", back_populates="unit_controller")
-    unit_died_events = relationship("unit_died_event", back_populates="killing_player")
     upgrade_complete_events = relationship("upgrade_complete_event", back_populates="player")
 
     @classmethod
@@ -59,8 +58,6 @@ class player(Injectable, Base):
             players.append(cls(**data, **parents))
 
         session.add_all(players)
-
-
 
     @classmethod
     async def process_dependancies(cls, obj, replay, session):

@@ -4,12 +4,13 @@ from sqlalchemy.orm import relationship
 
 from collections import defaultdict
 
+from database.inject import Injectable
+from database.base import Base
+
 from database.warehouse.replay.info import info
 from database.warehouse.replay.player import player
 from database.warehouse.replay.user import user
 from database.warehouse.datapack.unit_type import unit_type
-from database.inject import Injectable
-from database.base import Base
 
 
 class object(Injectable, Base):
@@ -70,23 +71,26 @@ class object(Injectable, Base):
             _objects.append(cls(**data, **parents))
 
         session.add_all(_objects)
-        breakpoint()
-
 
     @classmethod
     async def process_dependancies(cls, obj, replay, session):
         _unit, _info, _player = obj._type_class, replay.filehash, obj.owner
-        if not (_unit and _info and _player and _unit.race != "Neutral"):
-            return None
+        parents = defaultdict(lambda:None)
 
         unit_statement = select(unit_type).where(
                 and_(unit_type.release_string == replay.release_string, unit_type.id == _unit.id))
         unit_result = await session.execute(unit_statement)
         _unit = unit_result.scalar()
+        parents["unit_type_id"] = _unit.primary_id
 
         info_statement = select(info).where(info.filehash == _info)
         info_result = await session.execute(info_statement)
         _info = info_result.scalar()
+        parents["info_id"] = _info.primary_id
+
+        # Not all objects have an owner. They may have references in events, though.
+        if not _player:
+            return parents
 
         user_statement = select(user).where(user.uid == _player.detail_data.get("bnet").get("uid"))
         user_result = await session.execute(user_statement)
@@ -97,11 +101,7 @@ class object(Injectable, Base):
         player_result = await session.execute(player_statement)
         _player = player_result.scalar()
 
-        parents = defaultdict(lambda:None)
-        parents["unit_type_id"] = _unit.primary_id
-        parents["info_id"] = _info.primary_id
         parents["owner_id"] = _player.primary_id
-
         return parents
 
     columns = \
