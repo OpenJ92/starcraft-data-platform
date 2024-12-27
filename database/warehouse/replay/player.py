@@ -40,7 +40,6 @@ class player(Injectable, Base):
     chat_events = relationship("chat_event", back_populates="player")
     player_stats_events = relationship("player_stats_event", back_populates="player")
     player_leave_events = relationship("player_leave_event", back_populates="player")
-    unit_born_events = relationship("unit_born_event", back_populates="unit_controller")
     upgrade_complete_events = relationship("upgrade_complete_event", back_populates="player")
 
     @classmethod

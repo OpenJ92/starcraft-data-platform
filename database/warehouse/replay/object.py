@@ -44,10 +44,10 @@ class object(Injectable, Base):
     unit_born_events = relationship("unit_born_event", back_populates="unit")
     unit_done_events = relationship("unit_done_event", back_populates="unit")
     unit_init_events = relationship("unit_init_event", back_populates="unit")
-    death_event = relationship(
-        "unit_died_event", primaryjoin="unit_died_event.unit_id==object.primary_id",
-        back_populates="unit",
-    )
+    unit_died_events = relationship(
+        "unit_died_event",
+        primaryjoin="unit_died_event.unit_id==object.primary_id",
+        back_populates="unit")
     kill_events = relationship(
         "unit_died_event",
         primaryjoin="unit_died_event.killing_unit_id==object.primary_id",
