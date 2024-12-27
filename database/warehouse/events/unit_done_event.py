@@ -31,7 +31,7 @@ class unit_done_event(Injectable, Base):
 
     @classmethod
     async def process(cls, replay, session):
-        events = replay.events_dictionary['UnitBornEvent']
+        events = replay.events_dictionary['UnitDoneEvent']
 
         _events = []
         for event in events:
