@@ -25,7 +25,7 @@ class unit_died_event(Injectable, Base):
     unit = relationship(
         "object",
         primaryjoin="unit_died_event.unit_id==object.primary_id",
-        back_populates="death_event",)
+        back_populates="unit_died_events",)
 
     killing_unit_id = Column(Integer, ForeignKey("replay.object.primary_id"))
     killing_unit = relationship(
@@ -87,7 +87,6 @@ class unit_died_event(Injectable, Base):
     columns = \
         { "frame"
         , "second"
-        , "name"
         , "x"
         , "y"
         }
