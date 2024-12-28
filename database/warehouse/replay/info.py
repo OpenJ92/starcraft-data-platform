@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, BigInteger, Float, Text, Boolean, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, BigInteger, Float, Text, Boolean, DateTime, ForeignKey, UniqueConstraint
 from sqlalchemy.future import select
 from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.orm import relationship
@@ -12,7 +12,8 @@ from database.base import Base
 
 class info(Injectable, Base):
     __tablename__ = "info"
-    __table_args__ = {"schema": "replay"}
+    __table_args__ = ( UniqueConstraint("filehash", name="filehash_unique")
+                     , { "schema": 'replay' } )
 
     primary_id = Column(Integer, primary_key=True)
 
@@ -57,7 +58,6 @@ class info(Injectable, Base):
     chat_events = relationship("chat_event", back_populates="info")
     player_stats_events = relationship("player_stats_event", back_populates="info")
     player_leave_events = relationship("player_leave_event", back_populates="info")
-    player_setup_events = relationship("player_setup_event", back_populates="info")
     upgrade_complete_events = relationship("upgrade_complete_event", back_populates="info")
     unit_born_events = relationship("unit_born_event", back_populates="info")
     unit_done_events = relationship("unit_done_event", back_populates="info")

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Text, ForeignKey
+from sqlalchemy import Column, Integer, Text, ForeignKey, UniqueConstraint
 from sqlalchemy.future import select
 from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.orm import relationship
@@ -8,7 +8,8 @@ from database.base import Base
 
 class user(Injectable, Base):
     __tablename__ = "user"
-    __table_args__ = { "schema" : "replay" }
+    __table_args__ = ( UniqueConstraint("uid", name="uid_unique")
+                     , { "schema": 'replay' } )
 
     primary_id = Column(Integer, primary_key=True)
 

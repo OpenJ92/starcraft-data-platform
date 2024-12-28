@@ -35,7 +35,7 @@ class InjectionManager():
 
         except Exception as e:
             await session.rollback()
-            print(f"Unexpected error: {e}")
+            print(f"Unexpected error: {e} in {name}")
             # Gracefully handle all other exceptions
 
     def _prepare(self, replay):

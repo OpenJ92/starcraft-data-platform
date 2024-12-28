@@ -15,7 +15,6 @@ class upgrade_complete_event(Base):
     pid = Column(Integer)
     frame = Column(Integer)
     second = Column(Integer)
-    name = Column(Text)
     upgrade_type_name = Column(Text)
     count = Column(Integer)
 
