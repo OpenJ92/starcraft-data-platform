@@ -18,7 +18,6 @@ class unit_born_event(Injectable, Base):
 
     frame = Column(Integer)
     second = Column(Integer)
-    name = Column(Text)
     x = Column(Float)
     y = Column(Float)
 
