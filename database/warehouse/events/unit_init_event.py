@@ -33,8 +33,6 @@ class unit_init_event(Injectable, Base):
     async def process(cls, replay, session):
         events = replay.events_dictionary['UnitInitEvent']
 
-        breakpoint()
-
         _events = []
         for event in events:
             data = cls.get_data(event)

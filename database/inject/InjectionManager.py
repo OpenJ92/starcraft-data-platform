@@ -29,13 +29,14 @@ class InjectionManager():
                 name = f"{relation.schema}.{relation.name}"
                 relation_cls = self.base.injectable.get(name)
                 if relation_cls and issubclass(relation_cls, Injectable):
+                    print(f"Inject relation - {name}")
                     await relation_cls.process(replay, session)
                     await session.flush()  # Flush after each relation
             await session.commit()  # Commit transaction after all relations
 
         except Exception as e:
             await session.rollback()
-            print(f"Unexpected error: {e}")
+            print(f"Unexpected error: {e} in {name}")
             # Gracefully handle all other exceptions
 
     def _prepare(self, replay):
