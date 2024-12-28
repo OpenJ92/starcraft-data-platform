@@ -1,24 +1,24 @@
-from sqlalchemy import Column, Integer, Text, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, Text, Boolean, ForeignKey, and_
+from sqlalchemy.future import select
 from sqlalchemy.orm import relationship
 
-from database.base import Base
+from collections import defaultdict
 
 from database.warehouse.replay.player import player
 from database.warehouse.replay.info import info
+from database.inject import Injectable
+from database.base import Base
 
 
-class player_leave_event(Base):
+class player_leave_event(Injectable, Base):
     __tablename__ = "player_leave_event"
     __table_args__ = {"schema": "events"}
 
     primary_id = Column(Integer, primary_key=True)
 
-    pid = Column(Integer)
     frame = Column(Integer)
     second = Column(Integer)
-    name = Column(Text)
     is_local = Column(Boolean)
-
     leave_reason = Column(Integer)
 
     player_id = Column(Integer, ForeignKey("replay.player.primary_id"))
@@ -26,3 +26,45 @@ class player_leave_event(Base):
 
     info_id = Column(Integer, ForeignKey("replay.info.primary_id"))
     info = relationship("info", back_populates="player_leave_events")
+
+    @classmethod
+    @property
+    def __tableschema__(self):
+        return "events"
+
+    @classmethod
+    async def process(cls, replay, session):
+        events = replay.events_dictionary['ChatEvent']
+
+        _events = []
+        for event in events:
+            data = cls.get_data(event)
+            parents = await cls.process_dependancies(event, replay, session)
+
+            _events.append(cls(**data, **parents))
+
+        session.add_all(_events)
+
+    @classmethod
+    async def process_dependancies(cls, event, replay, session):
+        _player, _info = event.player.pid, replay.filehash
+        parents = defaultdict(lambda:None)
+
+        info_statement = select(info).where(info.filehash == _info)
+        info_result = await session.execute(info_statement)
+        _info = info_result.scalar()
+        parents['info_id'] = _info.primary_id
+
+        player_statement = select(player).where(and_(player.pid == _player, player.info_id == _info.primary_id))
+        player_result = await session.execute(player_statement)
+        _player = player_result.scalar()
+        parents['player_id'] = _player.primary_id
+
+        return parents
+
+    columns = \
+        { "frame"
+        , "second"
+        , "is_local"
+        , "leave_reason"
+        }

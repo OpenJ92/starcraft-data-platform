@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Text, Boolean, BigInteger, ForeignKey
+from sqlalchemy import Column, Integer, Text, Boolean, BigInteger, ForeignKey, UniqueConstraint
 from sqlalchemy.future import select
 from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.orm import relationship
@@ -12,10 +12,12 @@ from database.base import Base
 
 class player(Injectable, Base):
     __tablename__ = "player"
-    __table_args__ = {"schema": "replay"}
+    __table_args__ = ( UniqueConstraint("pid", "info_id", name="pid_info_id_unique")
+                     , { "schema": 'replay' } )
 
     primary_id = Column(Integer, primary_key=True)
 
+    pid = Column(Integer)
     team_id = Column(Integer)
     is_human = Column(Boolean)
     is_observer = Column(Boolean)
@@ -77,7 +79,8 @@ class player(Injectable, Base):
         return parents
 
     columns = \
-        { "team_id"
+        { "pid"
+        , "team_id"
         , "is_human"
         , "is_observer"
         , "is_referee"

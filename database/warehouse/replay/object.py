@@ -91,17 +91,13 @@ class object(Injectable, Base):
         # Not all objects have an owner. They may have references in events, though.
         if not _player:
             return parents
-
-        user_statement = select(user).where(user.uid == _player.detail_data.get("bnet").get("uid"))
-        user_result = await session.execute(user_statement)
-        _user = user_result.scalar()
-
         player_statement = select(player).where(
-                and_(player.info_id == _info.primary_id, player.user_id == _user.primary_id))
+                        and_(player.info_id == _info.primary_id, player.pid == _player.pid))
         player_result = await session.execute(player_statement)
         _player = player_result.scalar()
 
         parents["owner_id"] = _player.primary_id
+
         return parents
 
     columns = \
