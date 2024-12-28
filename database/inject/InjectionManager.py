@@ -29,6 +29,7 @@ class InjectionManager():
                 name = f"{relation.schema}.{relation.name}"
                 relation_cls = self.base.injectable.get(name)
                 if relation_cls and issubclass(relation_cls, Injectable):
+                    print(f"Inject relation - {name}")
                     await relation_cls.process(replay, session)
                     await session.flush()  # Flush after each relation
             await session.commit()  # Commit transaction after all relations
