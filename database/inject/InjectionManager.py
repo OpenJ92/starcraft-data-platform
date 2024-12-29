@@ -30,7 +30,7 @@ class InjectionManager():
         try:
             exists = select(info).where(info.filehash == replay.filehash)
             result = await session.execute(exists)
-            if result:
+            if result.scalar():
                 print(f"replay ({replay.filehash}) already exists")
                 return
 
