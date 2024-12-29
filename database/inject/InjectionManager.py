@@ -1,7 +1,9 @@
 from asyncio import gather, Event
+from sqlalchemy.future import select
 from collections import defaultdict
 
 from database.inject.Injectable import Injectable
+from database.warehouse.replay.info import info
 
 class InjectionManager():
     def __init__(self, base):
@@ -21,10 +23,17 @@ class InjectionManager():
         :param session: Database session supporting flush, commit and rollback:
         """
 
+
         ## constuct and attach hashmap of events w/event.name
         self._prepare(replay)
 
         try:
+            exists = select(info).where(info.filehash == replay.filehash)
+            result = await session.execute(exists)
+            if result.scalar():
+                print(f"replay ({replay.filehash}) already exists")
+                return
+
             for relation in self.metadata.sorted_tables:
                 name = f"{relation.schema}.{relation.name}"
                 relation_cls = self.base.injectable.get(name)
