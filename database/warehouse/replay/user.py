@@ -44,7 +44,7 @@ class user(Injectable, Base):
 
     @classmethod
     async def process_existence(cls, obj, session):
-        statement = select(cls).where(cls.uid == obj.uid)
+        statement = select(cls).where(cls.uid == obj.detail_data['bnet']['uid'])
         result = await session.execute(statement)
         return result.scalar()
 

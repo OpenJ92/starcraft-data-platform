@@ -41,7 +41,6 @@ class InjectionManager():
                     print(f"Inject relation - {name}")
                     await relation_cls.process(replay, session)
                     await session.flush()  # Flush after each relation
-            await session.commit()  # Commit transaction after all relations
 
         except Exception as e:
             await session.rollback()
