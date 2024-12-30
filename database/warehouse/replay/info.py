@@ -9,11 +9,14 @@ from database.warehouse.replay.map import map
 from database.inject import Injectable
 from database.base import Base
 
+from asyncio import Lock
+
 
 class info(Injectable, Base):
     __tablename__ = "info"
     __table_args__ = ( UniqueConstraint("filehash", name="filehash_unique")
                      , { "schema": 'replay' } )
+    _lock = Lock()
 
     primary_id = Column(Integer, primary_key=True)
 
@@ -71,13 +74,14 @@ class info(Injectable, Base):
 
     @classmethod
     async def process(cls, replay, session):
-        if await cls.process_existence(replay, session):
-            return
+        async with cls._lock:
+            if await cls.process_existence(replay, session):
+                return
 
-        data = cls.get_data(replay)
-        parents = await cls.process_dependancies(replay, replay, session)
+            data = cls.get_data(replay)
+            parents = await cls.process_dependancies(replay, replay, session)
 
-        session.add(cls(**data, **parents))
+            session.add(cls(**data, **parents))
 
     @classmethod
     async def process_existence(cls, replay, session):

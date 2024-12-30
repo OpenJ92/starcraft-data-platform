@@ -6,10 +6,13 @@ from sqlalchemy.orm import relationship
 from database.inject import Injectable
 from database.base import Base
 
+from asyncio import Lock
+
 class unit_type(Base, Injectable):
     __tablename__ = "unit_type"
     __table_args__ = ( UniqueConstraint("id", "release_string", name="unit_type_id_release_string_unique")
                      , { "schema": 'datapack' } )
+    _lock = Lock()
 
     primary_id = Column(Integer, primary_key=True)
     release_string = Column(Text)
@@ -35,14 +38,15 @@ class unit_type(Base, Injectable):
 
     @classmethod
     async def process(cls, replay, session):
-        if await cls.process_existence(replay, session):
-            return
+        async with cls._lock:
+            if await cls.process_existence(replay, session):
+                return
 
-        units = []
-        for _, unit in unit_type.get_unique(replay).items():
-            data = cls.get_data(unit)
-            units.append(cls(release_string=replay.release_string, **data))
-        session.add_all(units)
+            units = []
+            for _, unit in unit_type.get_unique(replay).items():
+                data = cls.get_data(unit)
+                units.append(cls(release_string=replay.release_string, **data))
+            session.add_all(units)
 
     @classmethod
     async def process_existence(cls, replay, session):

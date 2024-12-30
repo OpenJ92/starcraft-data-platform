@@ -6,10 +6,13 @@ from sqlalchemy.orm import relationship
 from database.inject import Injectable
 from database.base import Base
 
+from asyncio import Lock
+
 class user(Injectable, Base):
     __tablename__ = "user"
     __table_args__ = ( UniqueConstraint("uid", name="uid_unique")
                      , { "schema": 'replay' } )
+    _lock = Lock()
 
     primary_id = Column(Integer, primary_key=True)
 
@@ -27,15 +30,16 @@ class user(Injectable, Base):
 
     @classmethod
     async def process(cls, replay, session):
-        users = []
-        for player in replay.players:
-            if await cls.process_existence(player, session):
-                continue
+        async with cls._lock:
+            users = []
+            for player in replay.players:
+                if await cls.process_existence(player, session):
+                    continue
 
-            data = cls.get_data(player)
-            users.append(cls(**data))
+                data = cls.get_data(player)
+                users.append(cls(**data))
 
-        session.add_all(users)
+            session.add_all(users)
 
 
     @classmethod
