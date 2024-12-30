@@ -25,19 +25,17 @@ from database.base import Base
 import asyncio
 from sqlalchemy.sql import text
 
-async def init_db():
+def init_db():
     """Asynchronously initialize the database schema."""
 
-    async with engine.begin() as conn:
+    with engine.begin() as conn:
         # Create schemas if they do not exist
-        await conn.execute(text("CREATE SCHEMA IF NOT EXISTS datapack;"))
-        await conn.execute(text("CREATE SCHEMA IF NOT EXISTS events;"))
-        await conn.execute(text("CREATE SCHEMA IF NOT EXISTS replay;"))
+        conn.execute(text("CREATE SCHEMA IF NOT EXISTS datapack;"))
+        conn.execute(text("CREATE SCHEMA IF NOT EXISTS events;"))
+        conn.execute(text("CREATE SCHEMA IF NOT EXISTS replay;"))
 
         # Create all tables
-        await conn.run_sync(Base.metadata.create_all)
+        Base.metadata.create_all(bind=engine)
 
-    await engine.dispose()
+    engine.dispose()
 
-if __name__ == "__main__":
-    asyncio.run(init_db())

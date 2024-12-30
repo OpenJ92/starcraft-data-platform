@@ -9,7 +9,6 @@ from database.warehouse.replay.map import map
 from database.inject import Injectable
 from database.base import Base
 
-
 class info(Injectable, Base):
     __tablename__ = "info"
     __table_args__ = ( UniqueConstraint("filehash", name="filehash_unique")
@@ -70,34 +69,34 @@ class info(Injectable, Base):
         return "replay"
 
     @classmethod
-    async def process(cls, replay, session):
-        if await cls.process_existence(replay, session):
+    def process(cls, replay, session):
+        if  cls.process_existence(replay, session):
             return
 
         data = cls.get_data(replay)
-        parents = await cls.process_dependancies(replay, replay, session)
+        parents =  cls.process_dependancies(replay, replay, session)
 
         session.add(cls(**data, **parents))
 
     @classmethod
-    async def process_existence(cls, replay, session):
-        statement = select(cls).where(cls.filehash == replay.filehash)
-        result = await session.execute(statement)
-        return result.scalar()
+    def process_existence(cls, replay, session):
+       statement = select(cls).where(cls.filehash == replay.filehash)
+       result =  session.execute(statement)
+       return result.scalar()
 
     @classmethod
-    async def process_dependancies(cls, obj, replay, session):
-        _map, parents = obj.map_hash, defaultdict(lambda: None)
+    def process_dependancies(cls, obj, replay, session):
+       _map, parents = obj.map_hash, defaultdict(lambda: None)
 
-        statement = select(map).where(map.filehash == _map)
-        result    = await session.execute(statement)
-        _map      = result.scalar()
+       statement = select(map).where(map.filehash == _map)
+       result    =  session.execute(statement)
+       _map      = result.scalar()
 
-        if not _map:
-            return { "map_id" : None }
+       if not _map:
+           return { "map_id" : None }
 
-        parents["map_id"] = _map.primary_id
-        return parents
+       parents["map_id"] = _map.primary_id
+       return parents
 
     columns = \
         { "filename"

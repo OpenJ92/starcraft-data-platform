@@ -50,33 +50,33 @@ class player(Injectable, Base):
         return "replay"
 
     @classmethod
-    async def process(cls, replay, session):
-        players = []
-        for player in replay.players:
-            data = cls.get_data(player)
-            data["scaled_rating"]= player.init_data.get("scaled_rating")
-            parents = await cls.process_dependancies(player, replay, session)
-            players.append(cls(**data, **parents))
+    def process(cls, replay, session):
+       players = []
+       for player in replay.players:
+           data = cls.get_data(player)
+           data["scaled_rating"]= player.init_data.get("scaled_rating")
+           parents =  cls.process_dependancies(player, replay, session)
+           players.append(cls(**data, **parents))
 
-        session.add_all(players)
+       session.add_all(players)
 
     @classmethod
-    async def process_dependancies(cls, obj, replay, session):
-        _uid, _filehash = obj.detail_data.get("bnet").get("uid"), replay.filehash
-        parents = defaultdict(lambda:None)
+    def process_dependancies(cls, obj, replay, session):
+       _uid, _filehash = obj.detail_data.get("bnet").get("uid"), replay.filehash
+       parents = defaultdict(lambda:None)
 
-        user_statement = select(user).where(user.uid == _uid)
-        user_result = await session.execute(user_statement)
-        _user = user_result.scalar()
+       user_statement = select(user).where(user.uid == _uid)
+       user_result =  session.execute(user_statement)
+       _user = user_result.scalar()
 
-        info_statement = select(info).where(info.filehash == _filehash)
-        info_result = await session.execute(info_statement)
-        _info = info_result.scalar()
+       info_statement = select(info).where(info.filehash == _filehash)
+       info_result =  session.execute(info_statement)
+       _info = info_result.scalar()
 
-        parents['user_id'] = _user.primary_id
-        parents['info_id'] = _info.primary_id
+       parents['user_id'] = _user.primary_id
+       parents['info_id'] = _info.primary_id
 
-        return parents
+       return parents
 
     columns = \
         { "pid"

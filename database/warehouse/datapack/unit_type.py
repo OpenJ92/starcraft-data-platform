@@ -6,6 +6,7 @@ from sqlalchemy.orm import relationship
 from database.inject import Injectable
 from database.base import Base
 
+
 class unit_type(Base, Injectable):
     __tablename__ = "unit_type"
     __table_args__ = ( UniqueConstraint("id", "release_string", name="unit_type_id_release_string_unique")
@@ -34,8 +35,8 @@ class unit_type(Base, Injectable):
         return "datapack"
 
     @classmethod
-    async def process(cls, replay, session):
-        if await cls.process_existence(replay, session):
+    def process(cls, replay, session):
+        if cls.process_existence(replay, session):
             return
 
         units = []
@@ -45,9 +46,9 @@ class unit_type(Base, Injectable):
         session.add_all(units)
 
     @classmethod
-    async def process_existence(cls, replay, session):
+    def process_existence(cls, replay, session):
         statement = select(cls).where(cls.release_string == replay.release_string)
-        result = await session.execute(statement)
+        result = session.execute(statement)
         return result.first()
 
     @classmethod

@@ -6,7 +6,6 @@ from sqlalchemy.orm import relationship
 from database.inject import Injectable
 from database.base import Base
 
-
 class map(Injectable, Base):
     __tablename__ = "map"
     __table_args__ = {"schema": "replay"}
@@ -28,8 +27,8 @@ class map(Injectable, Base):
         return "replay"
 
     @classmethod
-    async def process(cls, replay, session):
-        if await cls.process_existence(replay.map_hash, session):
+    def process(cls, replay, session):
+        if  cls.process_existence(replay.map_hash, session):
             return
 
         # Load map if not exists
@@ -39,10 +38,10 @@ class map(Injectable, Base):
         session.add(cls(**data))
 
     @classmethod
-    async def process_existence(cls, filehash, session):
-        statement = select(cls).where(cls.filehash == filehash)
-        result = await session.execute(statement)
-        return result.scalar()
+    def process_existence(cls, filehash, session):
+       statement = select(cls).where(cls.filehash == filehash)
+       result =  session.execute(statement)
+       return result.scalar()
 
     columns = \
         { "filename"
