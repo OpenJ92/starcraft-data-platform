@@ -60,45 +60,45 @@ class object(Injectable, Base):
         return "replay"
 
     @classmethod
-    async def process(cls, replay, session):
-        _objects = []
-        for _, obj in replay.objects.items():
-            data = cls.get_data(obj)
-            parents = await cls.process_dependancies(obj, replay, session)
-            if not parents:
-                continue
+    def process(cls, replay, session):
+       _objects = []
+       for _, obj in replay.objects.items():
+           data = cls.get_data(obj)
+           parents =  cls.process_dependancies(obj, replay, session)
+           if not parents:
+               continue
 
-            _objects.append(cls(**data, **parents))
+           _objects.append(cls(**data, **parents))
 
-        session.add_all(_objects)
+       session.add_all(_objects)
 
     @classmethod
-    async def process_dependancies(cls, obj, replay, session):
-        _unit, _info, _player = obj._type_class, replay.filehash, obj.owner
-        parents = defaultdict(lambda:None)
+    def process_dependancies(cls, obj, replay, session):
+       _unit, _info, _player = obj._type_class, replay.filehash, obj.owner
+       parents = defaultdict(lambda:None)
 
-        unit_statement = select(unit_type).where(
-                and_(unit_type.release_string == replay.release_string, unit_type.id == _unit.id))
-        unit_result = await session.execute(unit_statement)
-        _unit = unit_result.scalar()
-        parents["unit_type_id"] = _unit.primary_id
+       unit_statement = select(unit_type).where(
+               and_(unit_type.release_string == replay.release_string, unit_type.id == _unit.id))
+       unit_result =  session.execute(unit_statement)
+       _unit = unit_result.scalar()
+       parents["unit_type_id"] = _unit.primary_id
 
-        info_statement = select(info).where(info.filehash == _info)
-        info_result = await session.execute(info_statement)
-        _info = info_result.scalar()
-        parents["info_id"] = _info.primary_id
+       info_statement = select(info).where(info.filehash == _info)
+       info_result =  session.execute(info_statement)
+       _info = info_result.scalar()
+       parents["info_id"] = _info.primary_id
 
-        # Not all objects have an owner. They may have references in events, though.
-        if not _player:
-            return parents
-        player_statement = select(player).where(
-                        and_(player.info_id == _info.primary_id, player.pid == _player.pid))
-        player_result = await session.execute(player_statement)
-        _player = player_result.scalar()
+       # Not all objects have an owner. They may have references in events, though.
+       if not _player:
+           return parents
+       player_statement = select(player).where(
+                       and_(player.info_id == _info.primary_id, player.pid == _player.pid))
+       player_result =  session.execute(player_statement)
+       _player = player_result.scalar()
 
-        parents["owner_id"] = _player.primary_id
+       parents["owner_id"] = _player.primary_id
 
-        return parents
+       return parents
 
     columns = \
         { "id"

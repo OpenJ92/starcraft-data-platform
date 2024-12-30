@@ -17,10 +17,10 @@ sc2reader.engine.register_plugin(APMTracker())
 sc2reader.engine.register_plugin(ContextLoader())
 sc2reader.engine.register_plugin(GameHeartNormalizer())
 
-## async def main():
+## def main():
 ##     # Initialize the database schema
 ##     print("Initializing database...")
-##     await init_db()
+##     init_db()
 ## 
 ##     # Load the replay
 ##     replay = sc2reader.load_replay("examples/example_5.SC2Replay", load_map=True)
@@ -28,18 +28,18 @@ sc2reader.engine.register_plugin(GameHeartNormalizer())
 ##     # Create the InjectionManager and inject the replay
 ##     print("Injecting replay data...")
 ##     manager = InjectionManager(Base)
-##     async with SessionLocal() as session:
-##         await manager.inject(replay, session)
+##     with SessionLocal() as session:
+##         manager.inject(replay, session)
 ## 
 ##     print("Injection complete!")
 
-async def main():
+def main():
     # Initialize the database schema
     print("Initializing database...")
-    await init_db()
+    init_db()
 
     batch = BatchInjector(Base, SessionLocal, LocalStorage('examples'))
-    await batch.inject()
+    batch.inject()
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

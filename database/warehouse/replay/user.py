@@ -29,23 +29,22 @@ class user(Injectable, Base):
         return "replay"
 
     @classmethod
-    async def process(cls, replay, session):
-        async with cls._lock:
-            users = []
-            for player in replay.players:
-                if await cls.process_existence(player, session):
-                    continue
+    def process(cls, replay, session):
+        users = []
+        for player in replay.players:
+            if cls.process_existence(player, session):
+                continue
 
-                data = cls.get_data(player)
-                users.append(cls(**data))
+            data = cls.get_data(player)
+            users.append(cls(**data))
 
-            session.add_all(users)
+        session.add_all(users)
 
 
     @classmethod
-    async def process_existence(cls, obj, session):
+    def process_existence(cls, obj, session):
         statement = select(cls).where(cls.uid == obj.detail_data['bnet']['uid'])
-        result = await session.execute(statement)
+        result = session.execute(statement)
         return result.scalar()
 
     @classmethod

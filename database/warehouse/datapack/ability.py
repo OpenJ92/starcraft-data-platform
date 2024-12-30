@@ -7,14 +7,12 @@ from database.warehouse.datapack.unit_type import unit_type
 from database.inject import Injectable
 from database.base import Base
 
-from asyncio import Lock
 
 class ability(Injectable, Base):
     __tablename__ = "ability"
     __tableschema__ = "datapack"
     __table_args__ = ( UniqueConstraint("id", "release_string", name="ability_id_release_string_unique")
                      , {"schema": __tableschema__})
-    _lock = Lock()
 
     primary_id = Column(Integer, primary_key=True)
 
@@ -37,34 +35,33 @@ class ability(Injectable, Base):
         return "datapack"
 
     @classmethod
-    async def process(cls, replay, session):
-        async with cls._lock:
-            if await cls.process_existence(replay, session):
-                return
+    def process(cls, replay, session):
+        if cls.process_existence(replay, session):
+            return
 
-            abilities = []
-            for _, ability in replay.datapack.abilities.items():
-                data = cls.get_data(ability)
-                parents = await cls.process_dependancies(ability, replay, session)
-                abilities.append(cls(release_string=replay.release_string, **data, **parents))
+        abilities = []
+        for _, ability in replay.datapack.abilities.items():
+            data = cls.get_data(ability)
+            parents = cls.process_dependancies(ability, replay, session)
+            abilities.append(cls(release_string=replay.release_string, **data, **parents))
 
-            session.add_all(abilities)
+        session.add_all(abilities)
 
     @classmethod
-    async def process_existence(cls, replay, session):
+    def process_existence(cls, replay, session):
         statement = select(cls).where(cls.release_string == replay.release_string)
-        result = await session.execute(statement)
+        result = session.execute(statement)
         return result.scalar()
 
     @classmethod
-    async def process_dependancies(cls, ability, replay, session):
+    def process_dependancies(cls, ability, replay, session):
         unit = ability.build_unit
         if not unit:
             return { "unit_type_id" : None }
 
         statement = select(unit_type).where(
                 and_(unit_type.release_string == replay.release_string, unit_type.id == unit.id))
-        result    = await session.execute(statement)
+        result    = session.execute(statement)
         unit      = result.scalar()
 
         if not unit:

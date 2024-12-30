@@ -1,5 +1,4 @@
 from sc2reader import load_replay
-from asyncio import gather
 
 from database.inject.InjectionManager import InjectionManager
 
@@ -9,18 +8,15 @@ class BatchInjector:
         self.injector = InjectionManager(base)
         self.storage = storage
 
-    async def inject(self):
-        async with self.session_factory() as session:
+    def inject(self):
+        with self.session_factory() as session:
             try:
                 replay_files, tasks = self.storage.list_files(), []
 
                 for replay_file in replay_files:
                     replay_path = self.storage.download(replay_file, f'examples/{replay_file}')
                     replay = load_replay(replay_path, load_map=True)
-                    tasks.append(self.injector.inject(replay, session))
-
-                results = await gather(*tasks)
-                await session.commit()  # Commit transaction after all relations
+                    self.injector.inject(replay, session)
 
             except Exception as e:
                 print(f"Unexpected error: {e}")
