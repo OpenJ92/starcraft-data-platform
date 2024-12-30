@@ -42,46 +42,46 @@ class unit_died_event(Injectable, Base):
         return "events"
 
     @classmethod
-    async def process(cls, replay, session):
-        events = replay.events_dictionary['UnitDiedEvent']
+    def process(cls, replay, session):
+       events = replay.events_dictionary['UnitDiedEvent']
 
-        _events = []
-        for event in events:
-            data = cls.get_data(event)
-            parents = await cls.process_dependancies(event, replay, session)
+       _events = []
+       for event in events:
+           data = cls.get_data(event)
+           parents =  cls.process_dependancies(event, replay, session)
 
-            _events.append(cls(**data, **parents))
+           _events.append(cls(**data, **parents))
 
-        session.add_all(_events)
+       session.add_all(_events)
 
     @classmethod
-    async def process_dependancies(cls, event, replay, session):
-        _info, _unit, _killing_unit = replay.filehash, event.unit_id, event.killing_unit_id
-        parents = defaultdict(lambda:None)
+    def process_dependancies(cls, event, replay, session):
+       _info, _unit, _killing_unit = replay.filehash, event.unit_id, event.killing_unit_id
+       parents = defaultdict(lambda:None)
 
-        info_statement = select(info).where(info.filehash == _info)
-        info_result = await session.execute(info_statement)
-        _info = info_result.scalar()
-        parents['info_id'] = _info.primary_id
+       info_statement = select(info).where(info.filehash == _info)
+       info_result =  session.execute(info_statement)
+       _info = info_result.scalar()
+       parents['info_id'] = _info.primary_id
 
-        unit_statement = select(object).where(
-                and_(object.info_id == _info.primary_id, object.id == _unit))
-        unit_result = await session.execute(unit_statement)
-        _unit = unit_result.scalar()
-        parents['unit_id'] = _unit.primary_id
+       unit_statement = select(object).where(
+               and_(object.info_id == _info.primary_id, object.id == _unit))
+       unit_result =  session.execute(unit_statement)
+       _unit = unit_result.scalar()
+       parents['unit_id'] = _unit.primary_id
 
-        # Not all units have a killer.
-        if not _killing_unit:
-            return parents
+       # Not all units have a killer.
+       if not _killing_unit:
+           return parents
 
-        killing_unit_statement = select(object).where(
-                and_(object.info_id == _info.primary_id, object.id == _killing_unit))
-        killing_unit_result = await session.execute(killing_unit_statement)
-        _killing_unit = killing_unit_result.scalar()
+       killing_unit_statement = select(object).where(
+               and_(object.info_id == _info.primary_id, object.id == _killing_unit))
+       killing_unit_result =  session.execute(killing_unit_statement)
+       _killing_unit = killing_unit_result.scalar()
 
-        parents['killing_unit_id'] = _killing_unit.primary_id
+       parents['killing_unit_id'] = _killing_unit.primary_id
 
-        return parents
+       return parents
 
 
     columns = \

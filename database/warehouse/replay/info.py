@@ -9,14 +9,10 @@ from database.warehouse.replay.map import map
 from database.inject import Injectable
 from database.base import Base
 
-from asyncio import Lock
-
-
 class info(Injectable, Base):
     __tablename__ = "info"
     __table_args__ = ( UniqueConstraint("filehash", name="filehash_unique")
                      , { "schema": 'replay' } )
-    _lock = Lock()
 
     primary_id = Column(Integer, primary_key=True)
 
@@ -73,35 +69,34 @@ class info(Injectable, Base):
         return "replay"
 
     @classmethod
-    async def process(cls, replay, session):
-        async with cls._lock:
-            if await cls.process_existence(replay, session):
-                return
+    def process(cls, replay, session):
+        if  cls.process_existence(replay, session):
+            return
 
-            data = cls.get_data(replay)
-            parents = await cls.process_dependancies(replay, replay, session)
+        data = cls.get_data(replay)
+        parents =  cls.process_dependancies(replay, replay, session)
 
-            session.add(cls(**data, **parents))
-
-    @classmethod
-    async def process_existence(cls, replay, session):
-        statement = select(cls).where(cls.filehash == replay.filehash)
-        result = await session.execute(statement)
-        return result.scalar()
+        session.add(cls(**data, **parents))
 
     @classmethod
-    async def process_dependancies(cls, obj, replay, session):
-        _map, parents = obj.map_hash, defaultdict(lambda: None)
+    def process_existence(cls, replay, session):
+       statement = select(cls).where(cls.filehash == replay.filehash)
+       result =  session.execute(statement)
+       return result.scalar()
 
-        statement = select(map).where(map.filehash == _map)
-        result    = await session.execute(statement)
-        _map      = result.scalar()
+    @classmethod
+    def process_dependancies(cls, obj, replay, session):
+       _map, parents = obj.map_hash, defaultdict(lambda: None)
 
-        if not _map:
-            return { "map_id" : None }
+       statement = select(map).where(map.filehash == _map)
+       result    =  session.execute(statement)
+       _map      = result.scalar()
 
-        parents["map_id"] = _map.primary_id
-        return parents
+       if not _map:
+           return { "map_id" : None }
+
+       parents["map_id"] = _map.primary_id
+       return parents
 
     columns = \
         { "filename"

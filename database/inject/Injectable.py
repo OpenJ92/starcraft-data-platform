@@ -11,7 +11,7 @@ class Injectable(ABC):
 
     @classmethod
     @abstractmethod
-    async def process(cls, replay, session):
+    def process(cls, replay, session):
         """Must be implemented by subclasses."""
         pass
 
