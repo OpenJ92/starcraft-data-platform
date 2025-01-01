@@ -33,9 +33,9 @@ def init_db():
         conn.execute(text("CREATE SCHEMA IF NOT EXISTS datapack;"))
         conn.execute(text("CREATE SCHEMA IF NOT EXISTS events;"))
         conn.execute(text("CREATE SCHEMA IF NOT EXISTS replay;"))
+        breakpoint()
 
-        # Create all tables
-        Base.metadata.create_all(bind=engine)
-
+    # Create all tables
+    Base.metadata.create_all(bind=engine)
     engine.dispose()
 

@@ -11,7 +11,7 @@ class BatchInjector:
     def inject(self):
         with self.session_factory() as session:
             try:
-                replay_files, tasks = self.storage.list_files(), []
+                replay_files = self.storage.list_files()
 
                 for replay_file in replay_files:
                     replay_path = self.storage.download(replay_file, f'examples/{replay_file}')
