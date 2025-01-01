@@ -43,7 +43,7 @@ class user(Injectable, Base):
 
     @classmethod
     def process_existence(cls, obj, session):
-        statement = select(cls).where(cls.uid == obj.detail_data['bnet']['uid'])
+        statement = select(cls).where(cls.uid == obj.detail_data.get('bnet').get('uid'))
         result = session.execute(statement)
         return result.scalar()
 
