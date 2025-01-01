@@ -1,8 +1,8 @@
-from database.config import SessionLocal
-from database.storage import LocalStorage
-from database.inject import BatchInjector, InjectionManager
+from starcraft_data_orm.config import SessionLocal
+from starcraft_data_orm.storage import LocalStorage
+from starcraft_data_orm.inject import BatchInjector, InjectionManager
 
-from database.init import *
+from starcraft_data_orm.init import *
 
 import sc2reader
 from sc2reader.engine.plugins import (
@@ -18,8 +18,8 @@ sc2reader.engine.register_plugin(ContextLoader())
 sc2reader.engine.register_plugin(GameHeartNormalizer())
 
 ## def main():
-##     # Initialize the database schema
-##     print("Initializing database...")
+##     # Initialize the starcraft_data_orm schema
+##     print("Initializing starcraft_data_orm...")
 ##     init_db()
 ## 
 ##     # Load the replay
@@ -34,8 +34,8 @@ sc2reader.engine.register_plugin(GameHeartNormalizer())
 ##     print("Injection complete!")
 
 def main():
-    # Initialize the database schema
-    print("Initializing database...")
+    # Initialize the starcraft_data_orm schema
+    print("Initializing starcraft_data_orm...")
     init_db()
 
     batch = BatchInjector(Base, SessionLocal, LocalStorage('examples'))
