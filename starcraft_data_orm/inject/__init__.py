@@ -1,3 +1,3 @@
-from database.inject.Injectable import Injectable
-from database.inject.InjectionManager import InjectionManager
-from database.inject.BatchInjector import BatchInjector
+from starcraft_data_orm.inject.Injectable import Injectable
+from starcraft_data_orm.inject.InjectionManager import InjectionManager
+from starcraft_data_orm.inject.BatchInjector import BatchInjector

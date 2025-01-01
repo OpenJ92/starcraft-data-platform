@@ -3,8 +3,8 @@ from sqlalchemy.future import select
 from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.orm import relationship
 
-from database.inject import Injectable
-from database.base import Base
+from starcraft_data_orm.inject import Injectable
+from starcraft_data_orm.base import Base
 
 from asyncio import Lock
 

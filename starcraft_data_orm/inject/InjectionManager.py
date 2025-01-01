@@ -1,8 +1,8 @@
 from sqlalchemy.future import select
 from collections import defaultdict
 
-from database.inject.Injectable import Injectable
-from database.warehouse.replay.info import info
+from starcraft_data_orm.inject.Injectable import Injectable
+from starcraft_data_orm.warehouse.replay.info import info
 
 class InjectionManager():
     def __init__(self, base):
@@ -56,7 +56,7 @@ class InjectionManager():
         del replay.events
 
 
-## ## Consider Supplying a "Base" at each level of the database via __init__.py file
+## ## Consider Supplying a "Base" at each level of the starcraft_data_orm via __init__.py file
 ## class InjectionManagerFactory():
 ##     def __init__(self):
 ##         pass

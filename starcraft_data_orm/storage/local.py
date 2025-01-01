@@ -1,6 +1,6 @@
 import os
 
-from database.storage.storage import Storage
+from starcraft_data_orm.storage.storage import Storage
 
 class LocalStorage(Storage):
     def __init__(self, base_path: str = "./storage"):

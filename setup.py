@@ -1,5 +1,8 @@
 from setuptools import setup, find_packages
 
+with open("requirements.txt", "r") as f:
+    requirements = f.read().splitlines()
+
 setup(
     name="starcraft-data-orm",  # Your package name
     version="0.1.0",  # Version number

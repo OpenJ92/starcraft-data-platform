@@ -3,8 +3,8 @@ from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.future import select
 from sqlalchemy.orm import relationship
 
-from database.inject import Injectable
-from database.base import Base
+from starcraft_data_orm.inject import Injectable
+from starcraft_data_orm.base import Base
 
 class map(Injectable, Base):
     __tablename__ = "map"

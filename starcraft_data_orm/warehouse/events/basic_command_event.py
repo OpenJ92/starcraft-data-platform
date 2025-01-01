@@ -4,11 +4,11 @@ from sqlalchemy.orm import relationship
 
 from collections import defaultdict
 
-from database.warehouse.datapack.ability import ability
-from database.warehouse.replay.info import info
-from database.warehouse.replay.player import player
-from database.inject import Injectable
-from database.base import Base
+from starcraft_data_orm.warehouse.datapack.ability import ability
+from starcraft_data_orm.warehouse.replay.info import info
+from starcraft_data_orm.warehouse.replay.player import player
+from starcraft_data_orm.inject import Injectable
+from starcraft_data_orm.base import Base
 
 
 class basic_command_event(Injectable, Base):

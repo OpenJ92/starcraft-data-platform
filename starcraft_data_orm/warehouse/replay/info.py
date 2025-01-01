@@ -5,9 +5,9 @@ from sqlalchemy.orm import relationship
 
 from collections import defaultdict
 
-from database.warehouse.replay.map import map
-from database.inject import Injectable
-from database.base import Base
+from starcraft_data_orm.warehouse.replay.map import map
+from starcraft_data_orm.inject import Injectable
+from starcraft_data_orm.base import Base
 
 class info(Injectable, Base):
     __tablename__ = "info"

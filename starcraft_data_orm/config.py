@@ -5,11 +5,11 @@ from sqlalchemy.orm import sessionmaker
 # Base Configuration Class
 class Config:
     """Base configuration with default settings."""
-    DB_USER = os.getenv("DB_USER", "default_user")  # Default database user
+    DB_USER = os.getenv("DB_USER", "default_user")  # Default starcraft_data_orm user
     DB_PASSWORD = os.getenv("DB_PASSWORD", "default_password")  # Default password
-    DB_HOST = os.getenv("DB_HOST", "localhost")  # Default database host
+    DB_HOST = os.getenv("DB_HOST", "localhost")  # Default starcraft_data_orm host
     DB_PORT = os.getenv("DB_PORT", "5432")  # Default PostgreSQL port
-    DB_NAME = os.getenv("DB_NAME", "default_database")  # Default database name
+    DB_NAME = os.getenv("DB_NAME", "default_starcraft_data_orm")  # Default starcraft_data_orm name
 
     @classmethod
     def get_connection_string(cls, async_mode=False):
@@ -33,7 +33,7 @@ class TestConfig(Config):
 class ProdConfig(Config):
     """Production-specific settings."""
     DB_NAME = "starcraft_prod"
-    DB_HOST = os.getenv("PROD_DB_HOST", "prod-database-instance.aws.com")  # Example AWS RDS host
+    DB_HOST = os.getenv("PROD_DB_HOST", "prod-datbase-instance.aws.com")  # Example AWS RDS host
 
 
 # Environment Mapping

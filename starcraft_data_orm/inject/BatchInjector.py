@@ -1,6 +1,6 @@
 from sc2reader import load_replay
 
-from database.inject.InjectionManager import InjectionManager
+from starcraft_data_orm.inject.InjectionManager import InjectionManager
 
 class BatchInjector:
     def __init__(self, base, session_factory, storage):

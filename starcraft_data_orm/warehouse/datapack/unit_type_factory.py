@@ -1,8 +1,8 @@
 from factory import Sequence, Faker, Iterator
 from factory.alchemy import SQLAlchemyModelFactory
 
-from database.config import SessionLocal
-from database.warehouse.unit_type import unit_type
+from starcraft_data_orm.config import SessionLocal
+from starcraft_data_orm.warehouse.unit_type import unit_type
 
 class UnitTypeFactory(SQLAlchemyModelFactory):
     class Meta:

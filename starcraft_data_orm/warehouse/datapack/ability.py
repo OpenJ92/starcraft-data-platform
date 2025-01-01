@@ -3,9 +3,9 @@ from sqlalchemy.future import select
 from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.orm import relationship
 
-from database.warehouse.datapack.unit_type import unit_type
-from database.inject import Injectable
-from database.base import Base
+from starcraft_data_orm.warehouse.datapack.unit_type import unit_type
+from starcraft_data_orm.inject import Injectable
+from starcraft_data_orm.base import Base
 
 
 class ability(Injectable, Base):

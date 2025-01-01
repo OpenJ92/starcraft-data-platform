@@ -4,13 +4,13 @@ from sqlalchemy.orm import relationship
 
 from collections import defaultdict
 
-from database.inject import Injectable
-from database.base import Base
+from starcraft_data_orm.inject import Injectable
+from starcraft_data_orm.base import Base
 
-from database.warehouse.replay.info import info
-from database.warehouse.replay.player import player
-from database.warehouse.replay.user import user
-from database.warehouse.datapack.unit_type import unit_type
+from starcraft_data_orm.warehouse.replay.info import info
+from starcraft_data_orm.warehouse.replay.player import player
+from starcraft_data_orm.warehouse.replay.user import user
+from starcraft_data_orm.warehouse.datapack.unit_type import unit_type
 
 
 class object(Injectable, Base):
