@@ -5,7 +5,7 @@ from starcraft_data_orm.warehouse.replay import *
 from starcraft_data_orm.warehouse.events import *
 
 from starcraft_data_orm.warehouse.base import WarehouseBase
-from starcraft_data_orm.config import engine
+from starcraft_data_orm.warehouse.config import engine
 
 def initialize_warehouse():
     """Asynchronously initialize the starcraft_data_orm schema."""

@@ -6,10 +6,11 @@ from sqlalchemy.orm import relationship
 from collections import defaultdict
 
 from starcraft_data_orm.warehouse.replay.map import map
+from starcraft_data_orm.warehouse.base import WarehouseBase
+from starcraft_data_orm.exceptions import ReplayExistsError
 from starcraft_data_orm.inject import Injectable
-from starcraft_data_orm.base import Base
 
-class info(Injectable, Base):
+class info(Injectable, WarehouseBase):
     __tablename__ = "info"
     __table_args__ = ( UniqueConstraint("filehash", name="filehash_unique")
                      , { "schema": 'replay' } )
@@ -71,7 +72,7 @@ class info(Injectable, Base):
     @classmethod
     def process(cls, replay, session):
         if  cls.process_existence(replay, session):
-            return
+            raise ReplayExistsError(replay.filehash)
 
         data = cls.get_data(replay)
         parents =  cls.process_dependancies(replay, replay, session)

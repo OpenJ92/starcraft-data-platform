@@ -4,9 +4,9 @@ from sqlalchemy.future import select
 from sqlalchemy.orm import relationship
 
 from starcraft_data_orm.inject import Injectable
-from starcraft_data_orm.base import Base
+from starcraft_data_orm.warehouse.base import WarehouseBase
 
-class map(Injectable, Base):
+class map(Injectable, WarehouseBase):
     __tablename__ = "map"
     __table_args__ = {"schema": "replay"}
 

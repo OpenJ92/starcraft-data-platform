@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship
 from collections import defaultdict
 
 from starcraft_data_orm.inject import Injectable
-from starcraft_data_orm.base import Base
+from starcraft_data_orm.warehouse.base import WarehouseBase
 
 from starcraft_data_orm.warehouse.replay.info import info
 from starcraft_data_orm.warehouse.replay.player import player
@@ -13,7 +13,7 @@ from starcraft_data_orm.warehouse.replay.user import user
 from starcraft_data_orm.warehouse.datapack.unit_type import unit_type
 
 
-class object(Injectable, Base):
+class object(Injectable, WarehouseBase):
     __tablename__ = "object"
     __table_args__ = {"schema": "replay"}
 

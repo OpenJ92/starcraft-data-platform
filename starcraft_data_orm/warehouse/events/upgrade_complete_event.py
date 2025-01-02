@@ -7,9 +7,9 @@ from collections import defaultdict
 from starcraft_data_orm.warehouse.replay.info import info
 from starcraft_data_orm.warehouse.replay.player import player
 from starcraft_data_orm.inject import Injectable
-from starcraft_data_orm.base import Base
+from starcraft_data_orm.warehouse.base import WarehouseBase
 
-class upgrade_complete_event(Injectable, Base):
+class upgrade_complete_event(Injectable, WarehouseBase):
     __tablename__ = "upgrade_complete_event"
     __table_args__ = {"schema": "events"}
 
