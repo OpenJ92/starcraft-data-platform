@@ -4,15 +4,12 @@ from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.orm import relationship
 
 from starcraft_data_orm.inject import Injectable
-from starcraft_data_orm.base import Base
+from starcraft_data_orm.warehouse.base import WarehouseBase
 
-from asyncio import Lock
-
-class user(Injectable, Base):
+class user(Injectable, WarehouseBase):
     __tablename__ = "user"
     __table_args__ = ( UniqueConstraint("uid", name="uid_unique")
                      , { "schema": 'replay' } )
-    _lock = Lock()
 
     primary_id = Column(Integer, primary_key=True)
 

@@ -2,7 +2,6 @@ from sqlalchemy.future import select
 from collections import defaultdict
 
 from starcraft_data_orm.inject.Injectable import Injectable
-from starcraft_data_orm.warehouse.replay.info import info
 
 class InjectionManager():
     def __init__(self, base):
@@ -27,12 +26,6 @@ class InjectionManager():
         self._prepare(replay)
 
         try:
-            exists = select(info).where(info.filehash == replay.filehash)
-            result = session.execute(exists)
-            if result.scalar():
-                print(f"replay ({replay.filehash}) already exists")
-                return
-
             for relation in self.metadata.sorted_tables:
                 name = f"{relation.schema}.{relation.name}"
                 relation_cls = self.base.injectable.get(name)

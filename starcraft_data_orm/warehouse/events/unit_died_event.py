@@ -7,9 +7,9 @@ from collections import defaultdict
 from starcraft_data_orm.warehouse.replay.info import info
 from starcraft_data_orm.warehouse.replay.object import object
 from starcraft_data_orm.inject import Injectable
-from starcraft_data_orm.base import Base
+from starcraft_data_orm.warehouse.base import WarehouseBase
 
-class unit_died_event(Injectable, Base):
+class unit_died_event(Injectable, WarehouseBase):
     __tablename__ = "unit_died_event"
     __table_args__ = {"schema": "events"}
 

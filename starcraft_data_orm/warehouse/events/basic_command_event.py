@@ -8,10 +8,10 @@ from starcraft_data_orm.warehouse.datapack.ability import ability
 from starcraft_data_orm.warehouse.replay.info import info
 from starcraft_data_orm.warehouse.replay.player import player
 from starcraft_data_orm.inject import Injectable
-from starcraft_data_orm.base import Base
+from starcraft_data_orm.warehouse.base import WarehouseBase
 
 
-class basic_command_event(Injectable, Base):
+class basic_command_event(Injectable, WarehouseBase):
     __tablename__ = "basic_command_event"
     __table_args__ = {"schema": "events"}
 

@@ -8,9 +8,9 @@ from collections import defaultdict
 from starcraft_data_orm.warehouse.replay.info import info
 from starcraft_data_orm.warehouse.replay.user import user
 from starcraft_data_orm.inject import Injectable
-from starcraft_data_orm.base import Base
+from starcraft_data_orm.warehouse.base import WarehouseBase
 
-class player(Injectable, Base):
+class player(Injectable, WarehouseBase):
     __tablename__ = "player"
     __table_args__ = ( UniqueConstraint("pid", "info_id", name="pid_info_id_unique")
                      , { "schema": 'replay' } )

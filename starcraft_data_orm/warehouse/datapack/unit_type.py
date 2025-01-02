@@ -4,10 +4,10 @@ from sqlalchemy.future import select
 from sqlalchemy.orm import relationship
 
 from starcraft_data_orm.inject import Injectable
-from starcraft_data_orm.base import Base
+from starcraft_data_orm.warehouse.base import WarehouseBase
 
 
-class unit_type(Base, Injectable):
+class unit_type(WarehouseBase, Injectable):
     __tablename__ = "unit_type"
     __table_args__ = ( UniqueConstraint("id", "release_string", name="unit_type_id_release_string_unique")
                      , { "schema": 'datapack' } )

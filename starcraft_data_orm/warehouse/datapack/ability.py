@@ -5,10 +5,10 @@ from sqlalchemy.orm import relationship
 
 from starcraft_data_orm.warehouse.datapack.unit_type import unit_type
 from starcraft_data_orm.inject import Injectable
-from starcraft_data_orm.base import Base
+from starcraft_data_orm.warehouse.base import WarehouseBase
 
 
-class ability(Injectable, Base):
+class ability(Injectable, WarehouseBase):
     __tablename__ = "ability"
     __tableschema__ = "datapack"
     __table_args__ = ( UniqueConstraint("id", "release_string", name="ability_id_release_string_unique")
