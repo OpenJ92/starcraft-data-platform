@@ -9,7 +9,7 @@ class DeclarativeABCMeta(DeclarativeMeta, ABCMeta):
     pass
 
 @as_declarative(metadata = MetaData(), metaclass=DeclarativeABCMeta)
-class Base:
+class WarehouseBase:
     injectable = {}  # Dictionary to map table names to classes
 
     @declared_attr
@@ -22,4 +22,4 @@ class Base:
         super().__init_subclass__(**kwargs)
         if hasattr(cls, "process"):
             name = f"{cls.__tableschema__}.{cls.__tablename__}"
-            Base.injectable[name] = cls
+            __class__.injectable[name] = cls
