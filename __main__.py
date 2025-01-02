@@ -1,8 +1,8 @@
 from starcraft_data_orm.warehouse.config import SessionLocal
-from starcraft_data_orm.storage import LocalStorage
 from starcraft_data_orm.inject import BatchInjector, InjectionManager
-
 from starcraft_data_orm.warehouse import initialize_warehouse, WarehouseBase
+
+from storage_bridge import LocalStorage
 
 import sc2reader
 from sc2reader.engine.plugins import (
